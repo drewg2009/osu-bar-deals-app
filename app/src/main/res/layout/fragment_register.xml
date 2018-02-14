@@ -6,7 +6,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/login_header"
+        android:text="@string/register_header"
         android:textAlignment="center"
         android:textSize="40sp"
         android:layout_marginTop="40dp"/>
@@ -27,24 +27,20 @@
         android:hint="Enter your password"
         android:inputType="textPassword" />
 
-    <Button
-        android:id="@+id/button"
+    <EditText
+        android:id="@+id/editText3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Login" />
+        android:ems="10"
+        android:hint="Confirm your password"
+        android:inputType="textPassword" />
 
     <Button
-        android:id="@+id/registerButton"
+        android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Register" />
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Forgot Password?"
-        android:textAlignment="center" />
 
 
 </LinearLayout>

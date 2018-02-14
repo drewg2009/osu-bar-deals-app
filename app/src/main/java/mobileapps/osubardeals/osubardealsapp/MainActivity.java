@@ -1,9 +1,7 @@
 package mobileapps.osubardeals.osubardealsapp;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -21,16 +19,10 @@ public class MainActivity extends AppCompatActivity {
 //        setSupportActionBar(toolbar);
         manager = getSupportFragmentManager();
         LoginFragment loginFragment = new LoginFragment();
-        loadFragment(loginFragment);
+        FragmentManagerSingleton.instance().loadFragment(manager, loginFragment, false);
 
     }
 
-    private void loadFragment(Fragment f){
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.fragmentContainer,f,"LoginFragment");
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
