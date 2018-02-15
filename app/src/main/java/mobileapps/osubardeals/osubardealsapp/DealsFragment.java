@@ -8,22 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link LoginFragment.OnFragmentInteractionListener} interface
+ * {@link DealsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link LoginFragment#newInstance} factory method to
+ * Use the {@link DealsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LoginFragment extends Fragment {
+public class DealsFragment extends Fragment {
 
-    private Button registerButton;
-    private Button logInButton;
-    private TextView forgotPasswordText;
+    private TextView Deal1;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,7 +37,7 @@ public class LoginFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public LoginFragment() {
+    public DealsFragment() {
         // Required empty public constructor
 
     }
@@ -50,8 +51,8 @@ public class LoginFragment extends Fragment {
      * @return A new instance of fragment LoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static LoginFragment newInstance(String param1, String param2) {
-        LoginFragment fragment = new LoginFragment();
+    public static DealsFragment newInstance(String param1, String param2) {
+        DealsFragment fragment = new DealsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -74,31 +75,14 @@ public class LoginFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_deals, container, false);
 
+        Deal1= (TextView) v.findViewById(R.id.OutrInn_D1);
 
-        View v = inflater.inflate(R.layout.fragment_login, container, false);
-        registerButton = (Button)v.findViewById(R.id.registerButton);
-        forgotPasswordText= (TextView)v.findViewById(R.id.forgotPasswordText);
-        logInButton = (Button)v.findViewById(R.id.button);
-
-        registerButton.setOnClickListener(new View.OnClickListener() {
+        Deal1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new RegisterFragment(),true);
-            }
-        });
-
-        forgotPasswordText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new ForgotPasswordFragment(),true);
-            }
-        });
-
-        logInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
+                //FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new ForgotPasswordFragment(),true);
             }
         });
 

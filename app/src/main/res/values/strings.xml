@@ -8,4 +8,14 @@
     <string name="register_header">Register</string>
     <string name="forgot_password_header">Forgot Password</string>
     <string name="username_hint">i.e. yourname@gmail.com</string>
+
+    //Deals Pages
+    <string name="deals_header">Deals</string>
+
+    <string name="OutrInn_deal1">$1.50 double wells\nOut-r-Inn\nThursdays\ndistance</string>
+    <string name="Chumleys_deal1">Schooner Night\nChumley\'s Sports Bar\nMondays and Thursdays\ndistance</string>
+    <string name="Threes_deal1">$3 everything\nThrees Above High\nWednesdays\ndistance</string>
+    <string name="OutrInn_deal2">Mug Night\nOut-r-Inn\nSundays, Mondays\ndistance</string>
+    <string name="Tuna_deal1">Ugly Hour: $1 drinks\nUgly Tuna\nThursdays\ndistance</string>
+    <string name="Midway_deal1">Half-off everything\nMidway\nThursdays\ndistance</string>
 </resources>
