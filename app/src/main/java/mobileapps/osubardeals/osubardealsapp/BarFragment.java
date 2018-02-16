@@ -7,23 +7,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ScrollView;
-import android.widget.TextView;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link DealsFragment.OnFragmentInteractionListener} interface
+ * {@link BarFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link DealsFragment#newInstance} factory method to
+ * Use the {@link BarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DealsFragment extends Fragment {
+public class BarFragment extends Fragment {
 
-    private TextView Deal1;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -37,7 +32,7 @@ public class DealsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public DealsFragment() {
+    public BarFragment() {
         // Required empty public constructor
 
     }
@@ -51,8 +46,8 @@ public class DealsFragment extends Fragment {
      * @return A new instance of fragment LoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DealsFragment newInstance(String param1, String param2) {
-        DealsFragment fragment = new DealsFragment();
+    public static BarFragment newInstance(String param1, String param2) {
+        BarFragment fragment = new BarFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -75,16 +70,9 @@ public class DealsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_deals, container, false);
+        View v = inflater.inflate(R.layout.fragment_outrinn, container, false);
 
-        Deal1= (TextView) v.findViewById(R.id.OutrInn_D1);
 
-        Deal1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarFragment(),true);
-            }
-        });
 
         return v;
     }

@@ -11,11 +11,17 @@
 
     //Deals Pages
     <string name="deals_header">Deals</string>
-
     <string name="OutrInn_deal1">$1.50 double wells\nOut-r-Inn\nThursdays\ndistance</string>
     <string name="Chumleys_deal1">Schooner Night\nChumley\'s Sports Bar\nMondays and Thursdays\ndistance</string>
     <string name="Threes_deal1">$3 everything\nThrees Above High\nWednesdays\ndistance</string>
     <string name="OutrInn_deal2">Mug Night\nOut-r-Inn\nSundays, Mondays\ndistance</string>
     <string name="Tuna_deal1">Ugly Hour: $1 drinks\nUgly Tuna\nThursdays\ndistance</string>
     <string name="Midway_deal1">Half-off everything\nMidway\nThursdays\ndistance</string>
+
+    <string name="Hours_Operation">Hours of Operation</string>
+    <string name="Directions">Directions</string>
+    //Out R Inn Bar Page
+    <string name="OutrInn_name">Out-r-Inn</string>
+    <string name="OutrInn_hours">Monday \t 3:00pm-2:30am \n Tuesday \t 3:00pm-2:30am \n Wednesday \t 3:00pm-2:30am \n Thursday \t 3:00pm-2:30am \n Friday \t 3:00pm-2:30am \n Saturday \t 1:00pm-2:30am \n Sunday \t 1:00pm-2:30am</string>
+
 </resources>
