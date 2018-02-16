@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         manager = getSupportFragmentManager();
         LoginFragment loginFragment = new LoginFragment();
         FragmentManagerSingleton.instance().loadFragment(manager, loginFragment, false);
-
+        Log.i("lifeCycle", "onCreate");
     }
 
 
