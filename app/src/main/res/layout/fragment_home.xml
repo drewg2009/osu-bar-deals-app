@@ -9,7 +9,7 @@
     android:paddingLeft="16dp"
     android:paddingRight="16dp"
     android:paddingTop="16dp"
-    tools:context="mobileapps.osubardeals.osubardealsapp.HomeFragment">
+    tools:context="mobileapps.osubardeals.osubardealsapp.Fragments.HomeFragment">
 
 
     <TextView
