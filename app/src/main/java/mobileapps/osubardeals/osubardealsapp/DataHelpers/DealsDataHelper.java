@@ -25,7 +25,8 @@ public class DealsDataHelper {
 
 // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(c);
-        String url ="http://www.google.com";
+        //String url ="http://www.google.com";
+        String url = "https://osu-bar-deals-api.herokuapp.com/test";
 
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
