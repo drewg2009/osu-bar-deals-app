@@ -24,6 +24,7 @@ import mobileapps.osubardeals.osubardealsapp.R;
 public class HomeFragment extends Fragment {
 
     private CardView dealsCard;
+    private CardView barsCard;
     private CardView trendingCard;
     private CardView favoritesCard;
 
@@ -75,10 +76,17 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         dealsCard = view.findViewById(R.id.deals_card);
+        barsCard = view.findViewById(R.id.bars_card);
         trendingCard = view.findViewById(R.id.trending_card);
         favoritesCard = view.findViewById(R.id.favorites_card);
 
         dealsCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
+            }
+        });
+        barsCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
