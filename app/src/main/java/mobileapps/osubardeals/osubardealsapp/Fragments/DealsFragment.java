@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -38,6 +39,7 @@ public class DealsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ProgressBar spinner;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -72,6 +74,9 @@ public class DealsFragment extends Fragment {
                         Log.i("volley res", response.toString());
                         mAdapter = new DealsAdapter(JSONHelper.getJSONArray(response.toString()));
                         mRecyclerView.setAdapter(mAdapter);
+                        //remove spinner
+                        spinner.setVisibility(View.GONE);
+
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -83,7 +88,6 @@ public class DealsFragment extends Fragment {
 // Add the request to the RequestQueue.
         queue.add(stringRequest);
     }
-
 
 
     /**
@@ -122,15 +126,14 @@ public class DealsFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_deals, container, false);
 
         mRecyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view);
-                // use this setting to improve performance if you know that changes
-                // in content do not change the layout size of the RecyclerView
-                mRecyclerView.setHasFixedSize(true);
-
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        // specify an adapter (see also next example)
+        spinner = (ProgressBar)v.findViewById(R.id.dealsSpinner);
         getAllDeals(getContext());
 
         return v;
