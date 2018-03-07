@@ -1,8 +1,10 @@
 package mobileapps.osubardeals.osubardealsapp.Adapters;
 
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,11 +27,20 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public LinearLayout ll;
-        public TextView tv;
-        public ViewHolder(LinearLayout ll) {
-            super(ll);
-            this.ll = ll;
+        public CardView cardView;
+        public ImageView imageView;
+        public TextView descTextView;
+        public TextView hoursTextView;
+        public TextView locationTextView;
+
+        public ViewHolder(CardView cardView, ImageView imageView, TextView descTextView,
+                          TextView hoursTextView, TextView locationTextView) {
+            super(cardView);
+            this.cardView = cardView;
+            this.imageView = imageView;
+            this.descTextView = descTextView;
+            this.hoursTextView = hoursTextView;
+            this.locationTextView = locationTextView;
         }
     }
 
@@ -43,16 +54,18 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
     public DealsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                    int viewType) {
 
-        LinearLayout dealLayout = (LinearLayout) LayoutInflater.from(parent.getContext())
+        CardView dealCard = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_deal, parent, false);
-        TextView tv = (TextView) dealLayout.findViewById(R.id.dealTextView);
+        ImageView imageView = (ImageView) dealCard.findViewById(R.id.dealImageView)
+        TextView descTextView = (TextView) dealCard.findViewById(R.id.descTextView);
+        TextView hoursTextView = (TextView) dealCard.findViewById(R.id.hoursTextView);
+        TextView locationTextView = (TextView) dealCard.findViewById(R.id.locationTextView);
 
         // create a new view
 //        TextView v = (TextView) LayoutInflater.from(parent.getContext())
 //                .inflate(R.layout.my_text_view, parent, false);
 
-        ViewHolder vh = new ViewHolder(dealLayout);
-        vh.tv = tv;
+        ViewHolder vh = new ViewHolder(dealCard, imageView, descTextView, hoursTextView, locationTextView);
         return vh;
     }
 
