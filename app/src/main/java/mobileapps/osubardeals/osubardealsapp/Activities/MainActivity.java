@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import mobileapps.osubardeals.osubardealsapp.DataHelpers.DealsDataHelper;
 import mobileapps.osubardeals.osubardealsapp.Fragments.LoginFragment;
 import mobileapps.osubardeals.osubardealsapp.R;
 import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
@@ -26,9 +25,6 @@ public class MainActivity extends AppCompatActivity {
         LoginFragment loginFragment = new LoginFragment();
         FragmentManagerSingleton.instance().loadFragment(manager, loginFragment, false);
         Log.i("lifeCycle", "onCreate");
-
-        //testing
-        new DealsDataHelper().test(this);
     }
 
 

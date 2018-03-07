@@ -6,13 +6,22 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import mobileapps.osubardeals.osubardealsapp.Adapters.DealsAdapter;
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
 
 /**
@@ -44,9 +53,35 @@ public class DealsFragment extends Fragment {
 
     public DealsFragment() {
         // Required empty public constructor
+    }
 
+    public void getAllDeals(Context c) {
 
+// Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(c);
+        //String url ="http://www.google.com";
+        String url = "https://osu-bar-deals-api.herokuapp.com/deals/all";
 
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        //mTextView.setText("Response is: "+ response.substring(0,500));
+                        Log.i("volley res", response.toString());
+                        mAdapter = new DealsAdapter(JSONHelper.getJSONArray(response.toString()));
+                        mRecyclerView.setAdapter(mAdapter);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("volley error", error.toString());
+                //mTextView.setText("That didn't work!");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
 
@@ -96,16 +131,7 @@ public class DealsFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new DealsAdapter(new String[]{"hello","well hello 2 u to"});
-        mRecyclerView.setAdapter(mAdapter);
-//        Deal1= (TextView) v.findViewById(R.id.OutrInn_D1);
-//
-//        Deal1.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarFragment(),true);
-//            }
-//        });
+        getAllDeals(getContext());
 
         return v;
     }

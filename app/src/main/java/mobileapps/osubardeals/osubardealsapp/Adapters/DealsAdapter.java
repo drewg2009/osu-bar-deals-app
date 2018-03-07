@@ -6,6 +6,11 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.List;
+
 import mobileapps.osubardeals.osubardealsapp.R;
 
 /**
@@ -13,7 +18,7 @@ import mobileapps.osubardeals.osubardealsapp.R;
  */
 
 public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> {
-    private String[] mDataset;
+    private List<JSONObject> mDataset;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -29,7 +34,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public DealsAdapter(String[] myDataset) {
+    public DealsAdapter(List<JSONObject> myDataset) {
         mDataset = myDataset;
     }
 
@@ -57,8 +62,13 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
+        try {
+            holder.tv.setText(mDataset.get(position).getString("bar_name"));
 
-        holder.tv.setText(mDataset[position]);
+        }
+        catch (JSONException ex){
+            ex.printStackTrace();
+        }
 
 
     }
@@ -66,6 +76,6 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
     // Return the size of your dataset (invoked by the layout manager)
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return mDataset.size();
     }
 }
