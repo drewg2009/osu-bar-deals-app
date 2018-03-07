@@ -56,7 +56,7 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
 
         CardView dealCard = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_deal, parent, false);
-        ImageView imageView = (ImageView) dealCard.findViewById(R.id.dealImageView)
+        ImageView imageView = (ImageView) dealCard.findViewById(R.id.dealImageView);
         TextView descTextView = (TextView) dealCard.findViewById(R.id.descTextView);
         TextView hoursTextView = (TextView) dealCard.findViewById(R.id.hoursTextView);
         TextView locationTextView = (TextView) dealCard.findViewById(R.id.locationTextView);
@@ -76,7 +76,9 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
         // - replace the contents of the view with that element
 
         try {
-            holder.tv.setText(mDataset.get(position).getString("bar_name"));
+            holder.locationTextView.setText(mDataset.get(position).getString("location"));
+            holder.hoursTextView.setText(mDataset.get(position).getString("hours"));
+            holder.descTextView.setText(mDataset.get(position).getString("description"));
 
         }
         catch (JSONException ex){
