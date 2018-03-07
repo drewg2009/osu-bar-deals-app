@@ -4,12 +4,14 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
+import mobileapps.osubardeals.osubardealsapp.Adapters.DealsAdapter;
 import mobileapps.osubardeals.osubardealsapp.R;
 
 
@@ -24,6 +26,9 @@ import mobileapps.osubardeals.osubardealsapp.R;
 public class DealsFragment extends Fragment {
 
     private TextView Deal1;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -40,7 +45,11 @@ public class DealsFragment extends Fragment {
     public DealsFragment() {
         // Required empty public constructor
 
+
+
     }
+
+
 
     /**
      * Use this factory method to create a new instance of
@@ -77,14 +86,26 @@ public class DealsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_deals, container, false);
 
-        Deal1= (TextView) v.findViewById(R.id.OutrInn_D1);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view);
+                // use this setting to improve performance if you know that changes
+                // in content do not change the layout size of the RecyclerView
+                mRecyclerView.setHasFixedSize(true);
 
-        Deal1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarFragment(),true);
-            }
-        });
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+
+        // specify an adapter (see also next example)
+        mAdapter = new DealsAdapter(new String[]{"hello","well hello 2 u to"});
+        mRecyclerView.setAdapter(mAdapter);
+//        Deal1= (TextView) v.findViewById(R.id.OutrInn_D1);
+//
+//        Deal1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarFragment(),true);
+//            }
+//        });
 
         return v;
     }
