@@ -4,14 +4,25 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.DialogHelper;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 
 
 /**
@@ -26,7 +37,10 @@ public class LoginFragment extends Fragment {
 
     private Button registerButton;
     private Button logInButton;
+    private EditText emailUsernameField;
+    private EditText passwordField;
     private TextView forgotPasswordText;
+    private ProgressBar loginSpinner;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -73,35 +87,83 @@ public class LoginFragment extends Fragment {
 
     }
 
+    public void loginRequest(String email, String password) {
+        //validate password
+        if (email.length() > 0 && email.indexOf('@') != -1 && email.indexOf('.') != -1
+                && password.length() > 0) {
+            // Inflate the layout for this fragment// Instantiate the RequestQueue.
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            //String url ="http://www.google.com";
+            String url = "https://osu-bar-deals-api.herokuapp.com/users/login?email="+email+"&password="+password;
+
+            loginSpinner.setVisibility(View.VISIBLE);
+            // Request a string response from the provided URL.
+                        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                                new Response.Listener<String>() {
+                                    @Override
+                                    public void onResponse(String response) {
+                                        // Display the first 500 characters of the response string.
+                                        //mTextView.setText("Response is: "+ response.substring(0,500));
+                                        Log.i("Login: volley res", response);
+                                        //login credentials wrong
+                                        if(response.equals("false")){
+                                            DialogHelper.showDialog(getContext(), "Your email or password is incorrect. Please try again!", "Login Error");
+                                        }
+                                        else{
+                                            FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new DealsFragment(),true);
+                                        }
+                                        loginSpinner.setVisibility(View.GONE);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                DialogHelper.showDialog(getContext(), "Network errors. Please try again later.", "Login Network Error");
+
+                                //mTextView.setText("That didn't work!");
+                            }
+                        });
+            // Add the request to the RequestQueue.
+                        queue.add(stringRequest);
+        }
+        else{
+            DialogHelper.showDialog(getContext(), "Please enter a valid email and password..", "Login Validation Error");
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
 
 
         View v = inflater.inflate(R.layout.fragment_login, container, false);
-        registerButton = (Button)v.findViewById(R.id.registerButton);
-        forgotPasswordText= (TextView)v.findViewById(R.id.forgotPasswordText);
-        logInButton = (Button)v.findViewById(R.id.button);
+        registerButton = (Button) v.findViewById(R.id.loginRegisterButton);
+        forgotPasswordText = (TextView) v.findViewById(R.id.loginForgotPasswordText);
+        logInButton = (Button) v.findViewById(R.id.loginButton);
+        emailUsernameField = (EditText) v.findViewById(R.id.loginEmailField);
+        passwordField = (EditText) v.findViewById(R.id.loginPasswordField);
+        forgotPasswordText = (TextView) v.findViewById(R.id.loginForgotPasswordText);
+        loginSpinner = (ProgressBar) v.findViewById(R.id.loginSpinner);
 
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new RegisterFragment(),true);
+                //FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new RegisterFragment(), true);
             }
         });
 
         forgotPasswordText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new ForgotPasswordFragment(),true);
+                //FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new ForgotPasswordFragment(), true);
             }
         });
 
         logInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new HomeFragment(),true);
+                //FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new HomeFragment(), true);
+                loginRequest(emailUsernameField.getText().toString(), passwordField.getText().toString());
             }
         });
 
