@@ -118,15 +118,16 @@ public class LoginFragment extends Fragment {
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 DialogHelper.showDialog(getContext(), "Network errors. Please try again later.", "Login Network Error");
-
-                                //mTextView.setText("That didn't work!");
+                                loginSpinner.setVisibility(View.GONE);
                             }
                         });
             // Add the request to the RequestQueue.
                         queue.add(stringRequest);
         }
         else{
-            DialogHelper.showDialog(getContext(), "Please enter a valid email and password..", "Login Validation Error");
+            DialogHelper.showDialog(getContext(), "Please enter a valid email and password.", "Login Validation Error");
+            loginSpinner.setVisibility(View.GONE);
+
         }
     }
 
@@ -148,14 +149,14 @@ public class LoginFragment extends Fragment {
         registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new RegisterFragment(), true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new RegisterFragment(), true);
             }
         });
 
         forgotPasswordText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new ForgotPasswordFragment(), true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new ForgotPasswordFragment(), true);
             }
         });
 

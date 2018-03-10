@@ -4,11 +4,24 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.DialogHelper;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 
 
 /**
@@ -20,6 +33,15 @@ import mobileapps.osubardeals.osubardealsapp.R;
  * create an instance of this fragment.
  */
 public class RegisterFragment extends Fragment {
+
+
+    private Button registerButton;
+    private EditText emailField;
+    private EditText passwordField;
+    private EditText confirmPasswordField;
+    private ProgressBar registerSpinner;
+
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -62,11 +84,72 @@ public class RegisterFragment extends Fragment {
         }
     }
 
+    public void registerRequest(String email, String password, String confirmPassword) {
+        //validate password
+        if (email.length() > 0 && email.indexOf('@') != -1 && email.indexOf('.') != -1
+                && password.length() > 0
+                && confirmPassword.length() > 0
+                && password.equals(confirmPassword)) {
+            // Inflate the layout for this fragment// Instantiate the RequestQueue.
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            //String url ="http://www.google.com";
+            String url = "https://osu-bar-deals-api.herokuapp.com/users/add?email="+email+"&password="+password;
+
+            registerSpinner.setVisibility(View.VISIBLE);
+            // Request a string response from the provided URL.
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Display the first 500 characters of the response string.
+                            //mTextView.setText("Response is: "+ response.substring(0,500));
+                            Log.i("Signup: volley res", response);
+                            //login credentials wrong
+                            if(response.equals("false")){
+                                DialogHelper.showDialog(getContext(), "That user already exists. Please try another email!", "Login Error");
+                            }
+                            else{
+                                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new DealsFragment(),true);
+                            }
+                            registerSpinner.setVisibility(View.GONE);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    DialogHelper.showDialog(getContext(), "Network errors. Please try again later.", "Register Network Error");
+                    registerSpinner.setVisibility(View.GONE);
+                    //mTextView.setText("That didn't work!");
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+        }
+        else{
+            DialogHelper.showDialog(getContext(), "Please enter a valid email, password, and confirm password.", "Register Validation Error");
+            registerSpinner.setVisibility(View.GONE);
+        }
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false);
+        View v = inflater.inflate(R.layout.fragment_register, container, false);
+        registerButton = (Button) v.findViewById(R.id.registerButton);
+        emailField = (EditText) v.findViewById(R.id.registerEmailField);
+        passwordField = (EditText) v.findViewById(R.id.registerPasswordField);
+        confirmPasswordField = (EditText)v.findViewById(R.id.registerConfirmPasswordField);
+        registerSpinner = (ProgressBar) v.findViewById(R.id.registerSpinner);
+
+
+        registerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                registerRequest(emailField.getText().toString(),passwordField.getText().toString(),confirmPasswordField.getText().toString());
+            }
+        });
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
