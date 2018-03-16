@@ -4,12 +4,24 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ProgressBar;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.DialogHelper;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 
 
 /**
@@ -22,7 +34,9 @@ import mobileapps.osubardeals.osubardealsapp.R;
  */
 public class ForgotPasswordFragment extends Fragment {
 
-    private Button loginButton;
+    private Button requestNewPasswordBtn;
+    private EditText emailField, oldPasswordField,newPasswordField;
+    private ProgressBar forgotPasswordSpinner;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -76,8 +90,63 @@ public class ForgotPasswordFragment extends Fragment {
 
 
         View v = inflater.inflate(R.layout.fragment_forgot_password, container, false);
+        emailField = (EditText) v.findViewById(R.id.forgotPasswordEmail);
+        oldPasswordField = (EditText) v.findViewById(R.id.forgotPasswordOldPassword);
+        newPasswordField = (EditText)v.findViewById(R.id.forgotPasswordNewPassword);
+        forgotPasswordSpinner = (ProgressBar) v.findViewById(R.id.forgotPasswordSpinner);
+        requestNewPasswordBtn=  (Button) v.findViewById(R.id.requestNewPasswordBtn);
+
+
+        requestNewPasswordBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forgotPasswordRequest(emailField.getText().toString(),oldPasswordField.getText().toString(),newPasswordField.getText().toString());
+            }
+        });
 
         return v;
+    }
+
+    public void forgotPasswordRequest(String email, String oldPassword, String newPassword) {
+        //validate password
+        if (email.length() > 0 && email.indexOf('@') != -1 && email.indexOf('.') != -1
+                && oldPassword.length() > 0
+                && newPassword.length() > 0) {
+            // Inflate the layout for this fragment// Instantiate the RequestQueue.
+            RequestQueue queue = Volley.newRequestQueue(getContext());
+            String url = "https://osu-bar-deals-api.herokuapp.com/users/resetPassword?email="+email+"&password="+oldPassword+"&newPassword="+newPassword;
+
+            forgotPasswordSpinner.setVisibility(View.VISIBLE);
+            // Request a string response from the provided URL.
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Display the first 500 characters of the response string.
+                            Log.i("Forgot Pwd : volley res", response);
+                            //login credentials wrong
+                            if(response.equals("false")){
+                                DialogHelper.showDialog(getContext(), "That user already exists. Please try another email!", "Forgot Password Error");
+                            }
+                            else{
+                                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new DealsFragment(),true);
+                            }
+                            forgotPasswordSpinner.setVisibility(View.GONE);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    DialogHelper.showDialog(getContext(), "Network errors. Please try again later.", "Forgot Password Network Error");
+                    forgotPasswordSpinner.setVisibility(View.GONE);
+                }
+            });
+            // Add the request to the RequestQueue.
+            queue.add(stringRequest);
+        }
+        else{
+            DialogHelper.showDialog(getContext(), "Please enter a valid email, password, and confirm password.", "Forgot Password Validation Error");
+            forgotPasswordSpinner.setVisibility(View.GONE);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
