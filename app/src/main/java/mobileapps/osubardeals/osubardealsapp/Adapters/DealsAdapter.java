@@ -1,8 +1,12 @@
 package mobileapps.osubardeals.osubardealsapp.Adapters;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -13,7 +17,9 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import mobileapps.osubardeals.osubardealsapp.Fragments.SingleDealFragment;
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 
 /**
  * Created by drewgallagher on 3/7/18.
@@ -53,18 +59,33 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
 
     // Create new views (invoked by the layout manager)
     @Override
-    public DealsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public DealsAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
                                                    int viewType) {
 
         LinearLayout dealCard = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_deal, parent, false);
         CardView cardView = (CardView) dealCard.findViewById(R.id.dealCard);
         ImageView imageView = (ImageView) dealCard.findViewById(R.id.dealImageView);
-        TextView descTextView = (TextView) dealCard.findViewById(R.id.descTextView);
-        TextView hoursTextView = (TextView) dealCard.findViewById(R.id.hoursTextView);
-        TextView locationTextView = (TextView) dealCard.findViewById(R.id.locationTextView);
+        final TextView descTextView = (TextView) dealCard.findViewById(R.id.descTextView);
+        final TextView hoursTextView = (TextView) dealCard.findViewById(R.id.hoursTextView);
+        final TextView locationTextView = (TextView) dealCard.findViewById(R.id.locationTextView);
 
         ViewHolder vh = new ViewHolder(cardView, imageView, descTextView, hoursTextView, locationTextView, dealCard);
+
+        dealCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle dealBundle = new Bundle();
+                dealBundle.putString("description", descTextView.getText().toString());
+                dealBundle.putString("hours", hoursTextView.getText().toString());
+                dealBundle.putString("location", locationTextView.getText().toString());
+                SingleDealFragment deal= new SingleDealFragment();
+                deal.setArguments(dealBundle);
+                ((Activity) parent.getContext()).getFragmentManager();
+                FragmentManagerSingleton.instance().loadFragment(((FragmentActivity) parent.getContext()).getSupportFragmentManager(), deal, true);
+            }
+
+        });
         return vh;
     }
 

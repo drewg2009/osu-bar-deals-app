@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,17 +19,19 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.MapView;
 
 import mobileapps.osubardeals.osubardealsapp.R;
 import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
 /**
- * Created by Owner on 3/20/2018.
+ * Created by Erin George on 3/20/2018.
  */
 
 public class SingleDealFragment extends Fragment {
 
-
+    private TextView price, hour, location;
+    private MapView map;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -83,9 +86,17 @@ public class SingleDealFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         View v = inflater.inflate(R.layout.fragment_deal_page, container, false);
+        price = (TextView)v.findViewById(R.id.dealPrice);
+        hour = (TextView)v.findViewById(R.id.dealHours);
+        location = (TextView)v.findViewById(R.id.dealLocation);
+        map = (MapView) v.findViewById(R.id.dealDirections);
 
-
-
+        //populate everything
+        if(getArguments() != null){
+            price.setText(getArguments().getString("description"));
+            hour.setText(getArguments().getString("hours"));
+            location.setText(getArguments().getString("location"));
+        }
         return v;
     }
 

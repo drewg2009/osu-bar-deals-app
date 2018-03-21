@@ -37,7 +37,6 @@ import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
  */
 public class BarFragment extends Fragment {
 
-    private ProgressBar spinner;
     private TextView name, desc, hoursOp, hours, directions;
     private MapView map;
 
