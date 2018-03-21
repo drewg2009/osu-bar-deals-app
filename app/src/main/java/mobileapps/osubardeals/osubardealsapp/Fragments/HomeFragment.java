@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment {
         barsCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarsFragment(),true);
             }
         });
         trendingCard.setOnClickListener(new View.OnClickListener() {

@@ -118,7 +118,7 @@ public class BarsFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bars, container, false);
 
-        mRecyclerView = v.findViewById(R.id.barsRecyclerView);
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.barsRecyclerView);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         mRecyclerView.setHasFixedSize(true);
@@ -126,7 +126,7 @@ public class BarsFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        spinner = v.findViewById(R.id.barsSpinner);
+        spinner = (ProgressBar) v.findViewById(R.id.barsSpinner);
         getAllBars(getContext());
 
         return v;
@@ -145,8 +145,8 @@ public class BarsFragment extends Fragment {
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
         }
     }
 

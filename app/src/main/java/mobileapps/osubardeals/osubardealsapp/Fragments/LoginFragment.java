@@ -110,7 +110,7 @@ public class LoginFragment extends Fragment {
                                             DialogHelper.showDialog(getContext(), "Your email or password is incorrect. Please try again!", "Login Error");
                                         }
                                         else{
-                                            FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new DealsFragment(),true);
+                                            FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new HomeFragment(),true);
                                         }
                                         loginSpinner.setVisibility(View.GONE);
                                     }
