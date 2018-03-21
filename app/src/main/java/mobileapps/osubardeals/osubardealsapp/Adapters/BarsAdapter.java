@@ -63,12 +63,7 @@ public class BarsAdapter extends RecyclerView.Adapter<BarsAdapter.ViewHolder> {
         LinearLayout barCard = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_bar, parent, false);
 
-        barCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.i("barsPage", "Go team yay!");
-            }
-        });
+
 
         CardView cardView = barCard.findViewById(R.id.barCard);
         ImageView imageView = barCard.findViewById(R.id.barImageView);
@@ -93,7 +88,12 @@ public class BarsAdapter extends RecyclerView.Adapter<BarsAdapter.ViewHolder> {
             holder.descTextView.setText(mDataset.get(position).getString("description"));
             holder.hoursTextView.setText(mDataset.get(position).getString("hours"));
             holder.addressTextView.setText(mDataset.get(position).getString("address"));
-
+            holder.nameTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("barsPage", "Go team yay!");
+                }
+            });
         }
         catch (JSONException ex){
             ex.printStackTrace();

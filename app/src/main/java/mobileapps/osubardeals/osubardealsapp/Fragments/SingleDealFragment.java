@@ -28,10 +28,6 @@ import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
 public class SingleDealFragment extends Fragment {
 
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
-    private ProgressBar spinner;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -68,38 +64,7 @@ public class SingleDealFragment extends Fragment {
         return fragment;
     }
 
-    public void getDealInfo(Context c) {
 
-     // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(c);
-        //String url ="http://www.google.com";
-        String url = "https://osu-bar-deals-api.herokuapp.com/deals/all";
-
-     // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //mTextView.setText("Response is: "+ response.substring(0,500));
-                        Log.i("volley res", response.toString());
-                        mAdapter = new SingleDealAdapter(JSONHelper.getJSONArray(response.toString()));
-                        mRecyclerView.setAdapter(mAdapter);
-
-                        //remove spinner
-                        spinner.setVisibility(View.GONE);
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("volley error", error.toString());
-                //mTextView.setText("That didn't work!");
-            }
-        });
-     // Add the request to the RequestQueue.
-        queue.add(stringRequest);
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -119,16 +84,7 @@ public class SingleDealFragment extends Fragment {
 
         View v = inflater.inflate(R.layout.fragment_deal_page, container, false);
 
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view);
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        mRecyclerView.setHasFixedSize(true);
-        // use a linear layout manager
-        mLayoutManager = new LinearLayoutManager(getContext());
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        spinner = (ProgressBar)v.findViewById(R.id.dealSpinner);
 
-        getDealInfo(getContext());
 
         return v;
     }
