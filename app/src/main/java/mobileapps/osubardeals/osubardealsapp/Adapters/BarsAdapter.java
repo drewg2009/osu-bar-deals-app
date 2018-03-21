@@ -2,7 +2,9 @@ package mobileapps.osubardeals.osubardealsapp.Adapters;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -60,6 +62,14 @@ public class BarsAdapter extends RecyclerView.Adapter<BarsAdapter.ViewHolder> {
 
         LinearLayout barCard = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_bar, parent, false);
+
+        barCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("barsPage", "Go team yay!");
+            }
+        });
+
         CardView cardView = barCard.findViewById(R.id.barCard);
         ImageView imageView = barCard.findViewById(R.id.barImageView);
         TextView nameTextView = barCard.findViewById(R.id.nameTextViewBar);

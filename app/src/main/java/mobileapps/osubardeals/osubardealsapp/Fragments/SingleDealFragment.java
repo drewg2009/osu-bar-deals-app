@@ -1,9 +1,9 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -20,26 +18,21 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.maps.MapView;
 
-import mobileapps.osubardeals.osubardealsapp.Adapters.DealsAdapter;
 import mobileapps.osubardeals.osubardealsapp.R;
 import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
-
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link BarFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link BarFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * Created by Owner on 3/20/2018.
  */
-public class BarFragment extends Fragment {
 
+public class SingleDealFragment extends Fragment {
+
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     private ProgressBar spinner;
-    private TextView name, desc, hoursOp, hours, directions;
-    private MapView map;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,7 +45,7 @@ public class BarFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public BarFragment() {
+    public SingleDealFragment() {
         // Required empty public constructor
 
     }
@@ -66,13 +59,46 @@ public class BarFragment extends Fragment {
      * @return A new instance of fragment LoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BarFragment newInstance(String param1, String param2) {
-        BarFragment fragment = new BarFragment();
+    public static SingleDealFragment newInstance(String param1, String param2) {
+        SingleDealFragment fragment = new SingleDealFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    public void getDealInfo(Context c) {
+
+     // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(c);
+        //String url ="http://www.google.com";
+        String url = "https://osu-bar-deals-api.herokuapp.com/deals/all";
+
+     // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        //mTextView.setText("Response is: "+ response.substring(0,500));
+                        Log.i("volley res", response.toString());
+                        mAdapter = new SingleDealAdapter(JSONHelper.getJSONArray(response.toString()));
+                        mRecyclerView.setAdapter(mAdapter);
+
+                        //remove spinner
+                        spinner.setVisibility(View.GONE);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("volley error", error.toString());
+                //mTextView.setText("That didn't work!");
+            }
+        });
+     // Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     @Override
@@ -90,18 +116,19 @@ public class BarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_bar, container, false);
-        name = (TextView)v.findViewById(R.id.barName);
-        desc= (TextView)v.findViewById(R.id.barDescription);
-        hoursOp= (TextView)v.findViewById(R.id.HoursOp);
-        hours= (TextView)v.findViewById(R.id.barHours);
-        directions= (TextView)v.findViewById(R.id.directions);
-        map = (MapView) v.findViewById(R.id.barMapView);
 
-        //populate everything
+        View v = inflater.inflate(R.layout.fragment_deal_page, container, false);
 
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.my_recycler_view);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        spinner = (ProgressBar)v.findViewById(R.id.dealSpinner);
 
+        getDealInfo(getContext());
 
         return v;
     }
@@ -116,7 +143,7 @@ public class BarFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
+        if (context instanceof LoginFragment.OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
 //            throw new RuntimeException(context.toString()
