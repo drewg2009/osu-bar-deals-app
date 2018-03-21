@@ -102,6 +102,8 @@ public class BarFragment extends Fragment {
         //populate everything
         if(getArguments() != null){
             name.setText(getArguments().getString("name"));
+            desc.setText(getArguments().getString("description"));
+            hours.setText(getArguments().getString("hours"));
         }
 
 

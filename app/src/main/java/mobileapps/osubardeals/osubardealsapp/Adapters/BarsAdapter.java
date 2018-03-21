@@ -75,8 +75,8 @@ private Context c;
         CardView cardView = barCard.findViewById(R.id.barCard);
         ImageView imageView = barCard.findViewById(R.id.barImageView);
         final TextView nameTextView = barCard.findViewById(R.id.nameTextViewBar);
-        TextView descTextView = barCard.findViewById(R.id.descTextViewBar);
-        TextView hoursTextView = barCard.findViewById(R.id.hoursTextViewBar);
+        final TextView descTextView = barCard.findViewById(R.id.descTextViewBar);
+        final TextView hoursTextView = barCard.findViewById(R.id.hoursTextViewBar);
         TextView addressTextView = barCard.findViewById(R.id.addressTextViewBar);
 
         ViewHolder vh = new ViewHolder
@@ -87,6 +87,8 @@ private Context c;
             public void onClick(View v) {
                 Bundle barBundle = new Bundle();
                 barBundle.putString("name", nameTextView.getText().toString());
+                barBundle.putString("description", descTextView.getText().toString());
+                barBundle.putString("hours", hoursTextView.getText().toString());
                 BarFragment bar= new BarFragment();
                 bar.setArguments(barBundle);
                 ((Activity) parent.getContext()).getFragmentManager();
