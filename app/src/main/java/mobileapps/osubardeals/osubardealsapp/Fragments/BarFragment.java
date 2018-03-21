@@ -100,7 +100,9 @@ public class BarFragment extends Fragment {
         map = (MapView) v.findViewById(R.id.barMapView);
 
         //populate everything
-
+        if(getArguments() != null){
+            name.setText(getArguments().getString("name"));
+        }
 
 
         return v;

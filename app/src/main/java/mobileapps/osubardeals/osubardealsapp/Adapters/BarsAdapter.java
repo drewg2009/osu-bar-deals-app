@@ -1,5 +1,9 @@
 package mobileapps.osubardeals.osubardealsapp.Adapters;
 
+import android.app.Activity;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,7 +19,9 @@ import org.json.JSONObject;
 
 import java.util.List;
 
+import mobileapps.osubardeals.osubardealsapp.Fragments.BarFragment;
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 
 /**
  * Created by Jeremy Clark on 3/17/18.
@@ -23,7 +29,7 @@ import mobileapps.osubardeals.osubardealsapp.R;
 
 public class BarsAdapter extends RecyclerView.Adapter<BarsAdapter.ViewHolder> {
     private List<JSONObject> mDataset;
-
+private Context c;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -36,6 +42,7 @@ public class BarsAdapter extends RecyclerView.Adapter<BarsAdapter.ViewHolder> {
         public TextView descTextView;
         public TextView hoursTextView;
         public TextView addressTextView;
+
 
         public ViewHolder(CardView cardView, ImageView imageView, TextView nameTextView, TextView descTextView,
                           TextView hoursTextView, TextView addressTextView, LinearLayout ll) {
@@ -57,29 +64,42 @@ public class BarsAdapter extends RecyclerView.Adapter<BarsAdapter.ViewHolder> {
 
     // Create new views (invoked by the layout manager)
     @Override
-    public BarsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
+    public BarsAdapter.ViewHolder onCreateViewHolder(final ViewGroup parent,
                                                      int viewType) {
 
-        LinearLayout barCard = (LinearLayout) LayoutInflater.from(parent.getContext())
+        final LinearLayout barCard = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_bar, parent, false);
 
 
 
         CardView cardView = barCard.findViewById(R.id.barCard);
         ImageView imageView = barCard.findViewById(R.id.barImageView);
-        TextView nameTextView = barCard.findViewById(R.id.nameTextViewBar);
+        final TextView nameTextView = barCard.findViewById(R.id.nameTextViewBar);
         TextView descTextView = barCard.findViewById(R.id.descTextViewBar);
         TextView hoursTextView = barCard.findViewById(R.id.hoursTextViewBar);
         TextView addressTextView = barCard.findViewById(R.id.addressTextViewBar);
 
         ViewHolder vh = new ViewHolder
                 (cardView, imageView, nameTextView, descTextView, hoursTextView, addressTextView, barCard);
+
+        barCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle barBundle = new Bundle();
+                barBundle.putString("name", nameTextView.getText().toString());
+                BarFragment bar= new BarFragment();
+                bar.setArguments(barBundle);
+                ((Activity) parent.getContext()).getFragmentManager();
+                FragmentManagerSingleton.instance().loadFragment(((FragmentActivity) parent.getContext()).getSupportFragmentManager(), bar, true);
+        }
+
+        });
         return vh;
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(final ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
 
@@ -88,12 +108,7 @@ public class BarsAdapter extends RecyclerView.Adapter<BarsAdapter.ViewHolder> {
             holder.descTextView.setText(mDataset.get(position).getString("description"));
             holder.hoursTextView.setText(mDataset.get(position).getString("hours"));
             holder.addressTextView.setText(mDataset.get(position).getString("address"));
-            holder.nameTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("barsPage", "Go team yay!");
-                }
-            });
+
         }
         catch (JSONException ex){
             ex.printStackTrace();
