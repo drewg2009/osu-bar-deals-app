@@ -96,7 +96,7 @@ public class HomeFragment extends Fragment {
         barCrawlCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarCrawlFragment(),true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new ListBarCrawlFragment(),true);
             }
         });
         favoritesCard.setOnClickListener(new View.OnClickListener() {

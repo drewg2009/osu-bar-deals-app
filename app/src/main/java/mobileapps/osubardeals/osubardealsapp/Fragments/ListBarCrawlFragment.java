@@ -1,6 +1,7 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,9 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
+import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -21,9 +21,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.maps.MapView;
 
-import mobileapps.osubardeals.osubardealsapp.Adapters.DealsAdapter;
+import mobileapps.osubardeals.osubardealsapp.Adapters.BarsAdapter;
+import mobileapps.osubardeals.osubardealsapp.Adapters.CrawlAdapter;
 import mobileapps.osubardeals.osubardealsapp.R;
 import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
@@ -32,16 +32,18 @@ import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BarFragment.OnFragmentInteractionListener} interface
+ * {@link ListBarCrawlFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link BarFragment#newInstance} factory method to
+ * Use the {@link ListBarCrawlFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BarFragment extends Fragment {
+public class ListBarCrawlFragment extends Fragment {
 
-    private TextView name, desc, hoursOp, hours, directions;
-    private MapView map;
-    private CheckBox favorite;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ProgressBar spinner;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -54,7 +56,7 @@ public class BarFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public BarFragment() {
+    public ListBarCrawlFragment() {
         // Required empty public constructor
 
     }
@@ -68,8 +70,8 @@ public class BarFragment extends Fragment {
      * @return A new instance of fragment LoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BarFragment newInstance(String param1, String param2) {
-        BarFragment fragment = new BarFragment();
+    public static ListBarCrawlFragment newInstance(String param1, String param2) {
+        ListBarCrawlFragment fragment = new ListBarCrawlFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -88,40 +90,55 @@ public class BarFragment extends Fragment {
 
     }
 
+    public void getAllCrawls(Context c) {
+
+// Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(c);
+        //String url ="http://www.google.com";
+        String url = "https://osu-bar-deals-api.herokuapp.com/bar_crawls/all";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        //mTextView.setText("Response is: "+ response.substring(0,500));
+                        Log.i("volley res", response.toString());
+                        mAdapter = new CrawlAdapter(JSONHelper.getJSONArray(response.toString()));
+                        mRecyclerView.setAdapter(mAdapter);
+                        //remove spinner
+                        spinner.setVisibility(View.GONE);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("volley error", error.toString());
+                //mTextView.setText("That didn't work!");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_bar, container, false);
-        name = (TextView)v.findViewById(R.id.barName);
-        desc= (TextView)v.findViewById(R.id.barDescription);
-        hoursOp= (TextView)v.findViewById(R.id.HoursOp);
-        hours= (TextView)v.findViewById(R.id.barHours);
-        directions= (TextView)v.findViewById(R.id.directions);
-        map = (MapView) v.findViewById(R.id.barMapView);
-        favorite = (CheckBox) v.findViewById(R.id.barFavorite);
+        View v = inflater.inflate(R.layout.fragment_list_bar_crawl, container, false);
 
-        //need to figure out how to change mongo values
-        favorite.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                if(favorite.isChecked()){
-                    //add to favorites
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.crawlRecyclerView);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
-                }else {
-                    //take out of favorites
-                }
-            }
-        });
-
-        //populate everything
-        if(getArguments() != null){
-            name.setText(getArguments().getString("name"));
-            desc.setText(getArguments().getString("description"));
-            hours.setText(getArguments().getString("hours"));
-        }
-
-
+        spinner = (ProgressBar) v.findViewById(R.id.crawlSpinner);
+        getAllCrawls(getContext());
         return v;
     }
 
