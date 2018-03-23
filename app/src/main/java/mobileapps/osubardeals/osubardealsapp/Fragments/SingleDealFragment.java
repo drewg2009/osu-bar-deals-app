@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,6 +33,7 @@ public class SingleDealFragment extends Fragment {
 
     private TextView price, hour, location;
     private MapView map;
+    private CheckBox favorite;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -90,6 +92,7 @@ public class SingleDealFragment extends Fragment {
         hour = (TextView)v.findViewById(R.id.dealHours);
         location = (TextView)v.findViewById(R.id.dealLocation);
         map = (MapView) v.findViewById(R.id.dealDirections);
+        favorite = (CheckBox) v.findViewById(R.id.dealFavorite);
 
         //populate everything
         if(getArguments() != null){

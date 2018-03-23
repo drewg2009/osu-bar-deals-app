@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.MapView;
 
 import mobileapps.osubardeals.osubardealsapp.Adapters.DealsAdapter;
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
 
@@ -39,6 +41,7 @@ public class BarFragment extends Fragment {
 
     private TextView name, desc, hoursOp, hours, directions;
     private MapView map;
+    private CheckBox favorite;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -97,6 +100,18 @@ public class BarFragment extends Fragment {
         hours= (TextView)v.findViewById(R.id.barHours);
         directions= (TextView)v.findViewById(R.id.directions);
         map = (MapView) v.findViewById(R.id.barMapView);
+        favorite = (CheckBox) v.findViewById(R.id.barFavorite);
+
+        //need to figure out how to change mongo values
+        favorite.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if(favorite.isChecked()){
+                    //add to favorites
+                }else {
+                    //take out of favorites
+                }
+            }
+        });
 
         //populate everything
         if(getArguments() != null){

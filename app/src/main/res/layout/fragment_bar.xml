@@ -14,6 +14,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <CheckBox
+                android:id="@+id/barFavorite"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:text="Favorite" />
+
             <TextView
                 android:id="@+id/barName"
                 android:layout_width="match_parent"
