@@ -6,16 +6,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ShareActionProvider;
+import android.widget.EditText;
 import android.widget.TextView;
-
-import com.google.android.gms.maps.MapView;
-
 
 import mobileapps.osubardeals.osubardealsapp.R;
 import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
@@ -24,15 +19,15 @@ import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link BarCrawlFragment.OnFragmentInteractionListener} interface
+ * {@link NewBarCrawlFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link BarCrawlFragment#newInstance} factory method to
+ * Use the {@link NewBarCrawlFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BarCrawlFragment extends Fragment {
+public class NewBarCrawlFragment extends Fragment {
 
-    private TextView name;
-    private Button share, invite, create;
+    private EditText name;
+    private Button save;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -45,7 +40,7 @@ public class BarCrawlFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public BarCrawlFragment() {
+    public NewBarCrawlFragment() {
         // Required empty public constructor
 
     }
@@ -59,8 +54,8 @@ public class BarCrawlFragment extends Fragment {
      * @return A new instance of fragment LoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BarCrawlFragment newInstance(String param1, String param2) {
-        BarCrawlFragment fragment = new BarCrawlFragment();
+    public static NewBarCrawlFragment newInstance(String param1, String param2) {
+        NewBarCrawlFragment fragment = new NewBarCrawlFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -84,37 +79,14 @@ public class BarCrawlFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_bar_crawl, container, false);
-        name = (TextView)v.findViewById(R.id.crawlName);
-        share = (Button)v.findViewById(R.id.crawlShare);
-        invite = (Button)v.findViewById(R.id.crawlInvite);
-        create = (Button)v.findViewById(R.id.crawlCreate);
+        View v = inflater.inflate(R.layout.fragment_new_bar_crawl, container, false);
+        name = (EditText) v.findViewById(R.id.newCrawlName);
+        save = (Button)v.findViewById(R.id.crawlSave);
 
-        invite.setOnClickListener(new View.OnClickListener() {
+        //doesn't save data yet
+        save.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                String shareBody = "I invite you to my bar crawl I am going on! Let  me know if you want to join.";
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingIntent, "Invite via"));
-            }
-        });
-
-        share.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-                sharingIntent.setType("text/plain");
-                String shareBody = "Look at the bars I am going to!";
-                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
-                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-                startActivity(Intent.createChooser(sharingIntent, "Share via"));
-            }
-        });
-
-        create.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new NewBarCrawlFragment(),true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarCrawlFragment(),true);
             }
         });
 

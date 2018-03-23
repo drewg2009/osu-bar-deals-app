@@ -4,26 +4,35 @@
     android:orientation="vertical">
 
 
+    <Button
+        android:id="@+id/crawlCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="+ Create" />
+
+
+    <Button
+        android:id="@+id/crawlShare"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Share" />
+    <Button
+        android:id="@+id/crawlInvite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Invite" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <Button
-                android:id="@+id/crawlShare"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Share" />
 
-            <Button
-                android:id="@+id/crawlInvite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Invite" />
 
             <TextView
                 android:id="@+id/crawlName"
