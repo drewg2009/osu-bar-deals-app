@@ -1,32 +1,38 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ShareActionProvider;
+import android.widget.TextView;
 
-import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
+import com.google.android.gms.maps.MapView;
+
+
 import mobileapps.osubardeals.osubardealsapp.R;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link HomeFragment.OnFragmentInteractionListener} interface
+ * {@link BarCrawlFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link HomeFragment#newInstance} factory method to
+ * Use the {@link BarCrawlFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class HomeFragment extends Fragment {
+public class BarCrawlFragment extends Fragment {
 
-    private CardView dealsCard;
-    private CardView barsCard;
-    private CardView barCrawlCard;
-    private CardView favoritesCard;
+    private TextView name;
+    private Button share, invite;
+    private ShareActionProvider mShareActionProvider;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -39,8 +45,9 @@ public class HomeFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public HomeFragment() {
+    public BarCrawlFragment() {
         // Required empty public constructor
+
     }
 
     /**
@@ -49,11 +56,11 @@ public class HomeFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
+     * @return A new instance of fragment LoginFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
+    public static BarCrawlFragment newInstance(String param1, String param2) {
+        BarCrawlFragment fragment = new BarCrawlFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,44 +75,47 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        dealsCard = view.findViewById(R.id.deals_card);
-        barsCard = view.findViewById(R.id.bars_card);
-        barCrawlCard = view.findViewById(R.id.barCrawl_card);
-        favoritesCard = view.findViewById(R.id.favorites_card);
+        View v = inflater.inflate(R.layout.fragment_bar_crawl, container, false);
+        name = (TextView)v.findViewById(R.id.crawlName);
+        share = (Button)v.findViewById(R.id.crawlShare);
+        invite = (Button)v.findViewById(R.id.crawlInvite);
+        invite.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "I invite you to my bar crawl I am going on! Let  me know if you want to join.";
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Invite via"));
+            }
+        });
+        share.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "Look at the bars I am going to!";
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+            }
+        });
 
-        dealsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
-            }
-        });
-        barsCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarsFragment(),true);
+        //populate everything
+        if(getArguments() != null){
+            //name.setText(getArguments().getString("name"));
+        }
 
-            }
-        });
-        barCrawlCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarCrawlFragment(),true);
-            }
-        });
-        favoritesCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
-            }
-        });
-        return view;
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -120,10 +130,10 @@ public class HomeFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        }// else {
-        //    throw new RuntimeException(context.toString()
-        //            + " must implement OnFragmentInteractionListener");
-        //}
+        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+        }
     }
 
     @Override
