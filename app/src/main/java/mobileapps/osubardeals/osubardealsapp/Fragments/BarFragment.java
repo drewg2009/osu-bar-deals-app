@@ -4,15 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -23,10 +19,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.MapView;
 
-import mobileapps.osubardeals.osubardealsapp.Adapters.DealsAdapter;
+import java.io.UnsupportedEncodingException;
+
 import mobileapps.osubardeals.osubardealsapp.R;
-import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
-import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
 
 /**
@@ -94,28 +89,31 @@ public class BarFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bar, container, false);
-        name = (TextView)v.findViewById(R.id.barName);
-        desc= (TextView)v.findViewById(R.id.barDescription);
-        hoursOp= (TextView)v.findViewById(R.id.HoursOp);
-        hours= (TextView)v.findViewById(R.id.barHours);
-        directions= (TextView)v.findViewById(R.id.directions);
+        name = (TextView) v.findViewById(R.id.barName);
+        desc = (TextView) v.findViewById(R.id.barDescription);
+        hoursOp = (TextView) v.findViewById(R.id.HoursOp);
+        hours = (TextView) v.findViewById(R.id.barHours);
+        directions = (TextView) v.findViewById(R.id.directions);
         map = (MapView) v.findViewById(R.id.barMapView);
         favorite = (CheckBox) v.findViewById(R.id.barFavorite);
 
-        //need to figure out how to change mongo values
         favorite.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                if(favorite.isChecked()){
-                    //add to favorites
-
-                }else {
-                    //take out of favorites
+                //get user session email
+                String email = getContext().getSharedPreferences("preferences", 0).getString("email","false");
+                if(!email.equals("false")) {
+                    try {
+                        setFavorite(getContext(), email, name.getText().toString(), favorite.isChecked());
+                    }
+                    catch (UnsupportedEncodingException ex){
+                        ex.printStackTrace();
+                    }
                 }
             }
         });
 
         //populate everything
-        if(getArguments() != null){
+        if (getArguments() != null) {
             name.setText(getArguments().getString("name"));
             desc.setText(getArguments().getString("description"));
             hours.setText(getArguments().getString("hours"));
@@ -123,6 +121,36 @@ public class BarFragment extends Fragment {
 
 
         return v;
+    }
+
+    public void setFavorite(Context c, String email, String dealName, boolean add) throws UnsupportedEncodingException{
+
+// Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(c);
+        //String url ="http://www.google.com";
+        String ext = add ? "add" : "delete";
+        String q="email="+email + "&deal_name=" + dealName + "&deal_type=bar";
+        String url = "https://osu-bar-deals-api.herokuapp.com/favorites/" + ext + "?" + q;
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("Make favorite: ", response);
+
+                        //remove spinner
+                        //spinner.setVisibility(View.GONE);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Make favorite: error", error.toString());
+                //mTextView.setText("That didn't work!");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
     }
 
     // TODO: Rename method, update argument and hook method into UI event

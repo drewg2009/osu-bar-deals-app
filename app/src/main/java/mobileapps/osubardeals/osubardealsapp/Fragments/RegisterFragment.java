@@ -1,6 +1,7 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -84,7 +85,7 @@ public class RegisterFragment extends Fragment {
         }
     }
 
-    public void registerRequest(String email, String password, String confirmPassword) {
+    public void registerRequest(final String email, String password, String confirmPassword) {
         //validate password
         if (email.length() > 0 && email.indexOf('@') != -1 && email.indexOf('.') != -1
                 && password.length() > 0
@@ -109,6 +110,12 @@ public class RegisterFragment extends Fragment {
                                 DialogHelper.showDialog(getContext(), "That user already exists. Please try another email!", "Login Error");
                             }
                             else{
+                                //start user session
+                                SharedPreferences pref = getContext().getSharedPreferences("preferences", 0); // 0 - for private mode
+                                SharedPreferences.Editor editor = pref.edit();
+                                editor.putString("email", email);
+                                editor.apply();
+
                                 FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new DealsFragment(),true);
                             }
                             registerSpinner.setVisibility(View.GONE);
