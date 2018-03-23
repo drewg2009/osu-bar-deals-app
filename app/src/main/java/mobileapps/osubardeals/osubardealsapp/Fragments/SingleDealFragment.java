@@ -1,17 +1,14 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -22,8 +19,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.MapView;
 
+import java.io.UnsupportedEncodingException;
+
 import mobileapps.osubardeals.osubardealsapp.R;
-import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
 /**
  * Created by Erin George on 3/20/2018.
@@ -83,6 +81,37 @@ public class SingleDealFragment extends Fragment {
     }
 
 
+    public void setFavorite(Context c, String email, String dealName, boolean add) throws UnsupportedEncodingException {
+
+// Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(c);
+        //String url ="http://www.google.com";
+        String ext = add ? "add" : "delete";
+        String q="email="+email + "&deal_name=" + dealName + "&deal_type=deal";
+        String url = "https://osu-bar-deals-api.herokuapp.com/favorites/" + ext + "?" + q;
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("Make favorite: ", response);
+
+                        //remove spinner
+                        //spinner.setVisibility(View.GONE);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Make favorite: error", error.toString());
+                //mTextView.setText("That didn't work!");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -93,6 +122,22 @@ public class SingleDealFragment extends Fragment {
         location = (TextView)v.findViewById(R.id.dealLocation);
         map = (MapView) v.findViewById(R.id.dealDirections);
         favorite = (CheckBox) v.findViewById(R.id.dealFavorite);
+
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get user session email
+                String email = getContext().getSharedPreferences("preferences", 0).getString("email","false");
+                if(!email.equals("false")) {
+                    try {
+                        setFavorite(getContext(), email, price.getText().toString(), favorite.isChecked());
+                    }
+                    catch (UnsupportedEncodingException ex){
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
 
         //populate everything
         if(getArguments() != null){
