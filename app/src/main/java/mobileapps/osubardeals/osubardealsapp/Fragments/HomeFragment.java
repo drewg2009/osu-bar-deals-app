@@ -102,7 +102,7 @@ public class HomeFragment extends Fragment {
         favoritesCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new FavoritesFragment(),true);
             }
         });
         return view;
