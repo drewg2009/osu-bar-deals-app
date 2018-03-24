@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.UnsupportedEncodingException;
 
@@ -32,11 +39,13 @@ import mobileapps.osubardeals.osubardealsapp.R;
  * Use the {@link BarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BarFragment extends Fragment {
+public class BarFragment extends Fragment implements OnMapReadyCallback {
 
     private TextView name, desc, hoursOp, hours, directions;
     private MapView map;
     private CheckBox favorite;
+    private GoogleMap mMap;
+
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -94,7 +103,7 @@ public class BarFragment extends Fragment {
         hoursOp = (TextView) v.findViewById(R.id.HoursOp);
         hours = (TextView) v.findViewById(R.id.barHours);
         directions = (TextView) v.findViewById(R.id.directions);
-        map = (MapView) v.findViewById(R.id.barMapView);
+//        map = (MapView) v.findViewById(R.id.barMapView);
         favorite = (CheckBox) v.findViewById(R.id.barFavorite);
         final String email = getContext().getSharedPreferences("preferences", 0).getString("email","false");
 
@@ -122,8 +131,21 @@ public class BarFragment extends Fragment {
             }
         });
 
-
+//
+        SupportMapFragment mapFragment;
+        FragmentManager fm = getChildFragmentManager();
+        mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
         return v;
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        // Add a marker in Sydney, Australia, and move the camera.
+        LatLng sydney = new LatLng(-34, 151);
+        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
     }
 
     public void initFavorite(Context c, final String email,  String barName) {
