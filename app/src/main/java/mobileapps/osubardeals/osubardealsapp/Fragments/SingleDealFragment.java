@@ -81,13 +81,44 @@ public class SingleDealFragment extends Fragment {
     }
 
 
-    public void setFavorite(Context c, String email, String dealName, boolean add) throws UnsupportedEncodingException {
+    public void initFavorite(Context c, final String email,  String dealName) {
+
+// Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(c);
+        String q="email="+email + "&type=deal&deal_name="+dealName;
+        String url = "https://osu-bar-deals-api.herokuapp.com/favorites/deal/get?" + q;
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("Get favorite: ", response);
+
+                        favorite.setChecked(!response.equals("not found"));
+
+                        //remove spinner
+                        //spinner.setVisibility(View.GONE);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("Get favorite: error", error.toString());
+                //mTextView.setText("That didn't work!");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
+    public void setFavorite(Context c, String email, String dealName, String location,boolean add) throws UnsupportedEncodingException {
 
 // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(c);
         //String url ="http://www.google.com";
         String ext = add ? "add" : "delete";
-        String q="email="+email + "&deal_name=" + dealName + "&deal_type=deal";
+        String q="email="+email + "&deal_name=" + dealName + "&type=deal&bar_name="+location;
         String url = "https://osu-bar-deals-api.herokuapp.com/favorites/" + ext + "?" + q;
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -123,21 +154,6 @@ public class SingleDealFragment extends Fragment {
         map = (MapView) v.findViewById(R.id.dealDirections);
         favorite = (CheckBox) v.findViewById(R.id.dealFavorite);
 
-        favorite.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //get user session email
-                String email = getContext().getSharedPreferences("preferences", 0).getString("email","false");
-                if(!email.equals("false")) {
-                    try {
-                        setFavorite(getContext(), email, price.getText().toString(), favorite.isChecked());
-                    }
-                    catch (UnsupportedEncodingException ex){
-                        ex.printStackTrace();
-                    }
-                }
-            }
-        });
 
         //populate everything
         if(getArguments() != null){
@@ -145,6 +161,26 @@ public class SingleDealFragment extends Fragment {
             hour.setText(getArguments().getString("hours"));
             location.setText(getArguments().getString("location"));
         }
+
+        final String email = getContext().getSharedPreferences("preferences", 0).getString("email","false");
+
+
+        favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //get user session email
+                if(!email.equals("false")) {
+                    try {
+                        setFavorite(getContext(), email, price.getText().toString(), location.getText().toString(), favorite.isChecked());
+                    }
+                    catch (UnsupportedEncodingException ex){
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        });
+        initFavorite(getContext(), email, price.getText().toString());
+
         return v;
     }
 
