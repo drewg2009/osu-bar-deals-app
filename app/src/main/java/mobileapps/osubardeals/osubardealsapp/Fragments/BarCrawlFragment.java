@@ -5,20 +5,33 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.MapView;
 
 
+import mobileapps.osubardeals.osubardealsapp.Adapters.BarsAdapter;
+import mobileapps.osubardeals.osubardealsapp.Adapters.CrawlBarsAdapter;
 import mobileapps.osubardeals.osubardealsapp.R;
 import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
+import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
 
 /**
@@ -31,8 +44,12 @@ import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
  */
 public class BarCrawlFragment extends Fragment {
 
-    private TextView name;
+    private TextView name, date, location;
     private Button share, invite, create;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private ProgressBar spinner;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -80,12 +97,46 @@ public class BarCrawlFragment extends Fragment {
     }
 
 
+    public void getAllBars(Context c) {
+
+// Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(c);
+        //String url ="http://www.google.com";
+        String url = "https://osu-bar-deals-api.herokuapp.com/bar_crawls/all";
+
+// Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        // Display the first 500 characters of the response string.
+                        //mTextView.setText("Response is: "+ response.substring(0,500));
+                        Log.i("volley res", response.toString());
+                        mAdapter = new CrawlBarsAdapter(JSONHelper.getJSONArray(response.toString()));
+                        mRecyclerView.setAdapter(mAdapter);
+                        //remove spinner
+                        //spinner.setVisibility(View.GONE);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("volley error", error.toString());
+                //mTextView.setText("That didn't work!");
+            }
+        });
+// Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bar_crawl, container, false);
         name = (TextView)v.findViewById(R.id.crawlName);
+        date = (TextView) v.findViewById(R.id.crawlTime);
+        location = (TextView) v.findViewById(R.id.crawlLocations);
         share = (Button)v.findViewById(R.id.crawlShare);
         invite = (Button)v.findViewById(R.id.crawlInvite);
         create = (Button)v.findViewById(R.id.crawlCreate);
@@ -120,10 +171,21 @@ public class BarCrawlFragment extends Fragment {
 
         //populate everything
         if(getArguments() != null){
-            //name.setText(getArguments().getString("name"));
+            name.setText(getArguments().getString("name"));
+            date.setText(getArguments().getString("time"));
+            location.setText(getArguments().getString("order"));
         }
 
+        mRecyclerView = (RecyclerView) v.findViewById(R.id.singleCrawlRecyclerView);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(mLayoutManager);
 
+
+        getAllBars(getContext());
         return v;
     }
 
