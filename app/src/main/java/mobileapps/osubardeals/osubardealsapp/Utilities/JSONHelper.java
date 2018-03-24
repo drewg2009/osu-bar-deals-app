@@ -25,4 +25,16 @@ public class JSONHelper {
         }
         return list;
     }
+
+    public static JSONObject getOneJSONObject(String response){
+        JSONObject obj = null;
+        try {
+            JSONArray jsonArr = new JSONArray(response);
+            obj = jsonArr.getJSONObject(0);
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        return obj;
+    }
 }
