@@ -1,6 +1,7 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -8,9 +9,10 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
-import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 
 
 /**
@@ -27,6 +29,7 @@ public class HomeFragment extends Fragment {
     private CardView barsCard;
     private CardView barCrawlCard;
     private CardView favoritesCard;
+    private Button logoutButton;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -79,6 +82,7 @@ public class HomeFragment extends Fragment {
         barsCard = view.findViewById(R.id.bars_card);
         barCrawlCard = view.findViewById(R.id.barCrawl_card);
         favoritesCard = view.findViewById(R.id.favorites_card);
+        logoutButton = view.findViewById(R.id.logoutButton);
 
         dealsCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +109,13 @@ public class HomeFragment extends Fragment {
                 FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new FavoritesFragment(),true);
             }
         });
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                endSession();
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new LoginFragment(), true);
+            }
+        });
         return view;
     }
 
@@ -113,6 +124,11 @@ public class HomeFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
+    }
+
+    private void endSession(){
+        SharedPreferences sp = getContext().getSharedPreferences("preferences",0);
+        sp.edit().putString("email",null).apply();
     }
 
     @Override
