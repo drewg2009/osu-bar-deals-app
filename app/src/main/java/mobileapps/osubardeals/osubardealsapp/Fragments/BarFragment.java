@@ -1,10 +1,16 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +24,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -25,10 +33,15 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
+import java.util.Locale;
 
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.DialogHelper;
 
 
 /**
@@ -45,6 +58,7 @@ public class BarFragment extends Fragment implements OnMapReadyCallback {
     private MapView map;
     private CheckBox favorite;
     private GoogleMap mMap;
+    private String address;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -90,6 +104,8 @@ public class BarFragment extends Fragment implements OnMapReadyCallback {
         }
 
 
+
+
     }
 
 
@@ -114,6 +130,7 @@ public class BarFragment extends Fragment implements OnMapReadyCallback {
             name.setText(getArguments().getString("name"));
             desc.setText(getArguments().getString("description"));
             hours.setText(getArguments().getString("hours"));
+            address = getArguments().getString("address");
         }
 
         initFavorite(getContext(), email,name.getText().toString());
@@ -131,7 +148,7 @@ public class BarFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
-//
+
         SupportMapFragment mapFragment;
         FragmentManager fm = getChildFragmentManager();
         mapFragment = (SupportMapFragment) fm.findFragmentById(R.id.map);
@@ -139,13 +156,89 @@ public class BarFragment extends Fragment implements OnMapReadyCallback {
         return v;
     }
 
+    private void setMarker(String locName, String addressName, Location l) throws IOException{
+        Geocoder geocoder = new Geocoder(getContext(), Locale.getDefault());
+        double latitude, longitude;
+        latitude = longitude = 0;
+        if(l == null) {
+            List<Address> addresses = geocoder.getFromLocationName(addressName, 1);
+            if (addresses.size() > 0) {
+                Address address = addresses.get(0);
+                longitude = address.getLongitude();
+                latitude = address.getLatitude();
+            }
+            else{
+                DialogHelper.showDialog(getContext(),"We could not locate the address at this time. Please try again later.","Address not found");
+            }
+        }
+        else{
+            latitude = l.getLatitude();
+            longitude = l.getLongitude();
+        }
+        LatLng loc = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(loc).title(locName));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, 12));
+
+
+    }
+
+
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        // Add a marker in Sydney, Australia, and move the camera.
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        try {
+            //set bar marker
+            setMarker(name.getText().toString(), address, null);
+            String email = getContext().getSharedPreferences("preferences", 0).getString("email", "false");
+            FusedLocationProviderClient mFusedLocationClient = LocationServices.getFusedLocationProviderClient(getContext());
+
+
+            if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.ACCESS_COARSE_LOCATION},
+                        0);
+                //check if the permission was set okay
+                if (ContextCompat.checkSelfPermission(getContext(), android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED){
+                    mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                        @Override
+                        public void onSuccess(Location location) {
+                            //set my marker
+                            try {
+                                setMarker("Me", null, location);
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    });
+                }
+            } else {
+
+                mFusedLocationClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        //set my marker
+                        try {
+                            setMarker("Me", null, location);
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                });
+            }
+
+
+        }
+        catch (IOException ex){
+            ex.printStackTrace();
+        }
+
+
+
+
+            //setMarker(email,);
+
+
     }
 
     public void initFavorite(Context c, final String email,  String barName) {

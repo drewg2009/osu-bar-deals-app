@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +76,7 @@ private Context c;
         final TextView nameTextView = barCard.findViewById(R.id.nameTextViewBar);
         final TextView descTextView = barCard.findViewById(R.id.descTextViewBar);
         final TextView hoursTextView = barCard.findViewById(R.id.hoursTextViewBar);
-        TextView addressTextView = barCard.findViewById(R.id.addressTextViewBar);
+        final TextView addressTextView = barCard.findViewById(R.id.addressTextViewBar);
 
         ViewHolder vh = new ViewHolder
                 (cardView, imageView, nameTextView, descTextView, hoursTextView, addressTextView, barCard);
@@ -89,6 +88,7 @@ private Context c;
                 barBundle.putString("name", nameTextView.getText().toString());
                 barBundle.putString("description", descTextView.getText().toString());
                 barBundle.putString("hours", hoursTextView.getText().toString());
+                barBundle.putString("address",addressTextView.getText().toString());
                 BarFragment bar= new BarFragment();
                 bar.setArguments(barBundle);
                 ((Activity) parent.getContext()).getFragmentManager();
