@@ -1,6 +1,7 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -87,7 +88,7 @@ public class LoginFragment extends Fragment {
 
     }
 
-    public void loginRequest(String email, String password) {
+    public void loginRequest(final String email, String password) {
         //validate password
         if (email.length() > 0 && email.indexOf('@') != -1 && email.indexOf('.') != -1
                 && password.length() > 0) {
@@ -107,9 +108,18 @@ public class LoginFragment extends Fragment {
                                         Log.i("Login: volley res", response);
                                         //login credentials wrong
                                         if(response.equals("false")){
+
+
+
                                             DialogHelper.showDialog(getContext(), "Your email or password is incorrect. Please try again!", "Login Error");
                                         }
                                         else{
+                                            //start user session
+                                            SharedPreferences pref = getContext().getSharedPreferences("preferences", 0); // 0 - for private mode
+                                            SharedPreferences.Editor editor = pref.edit();
+                                            editor.putString("email", email);
+                                            editor.apply();
+
                                             FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new HomeFragment(),true);
                                         }
                                         loginSpinner.setVisibility(View.GONE);

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import mobileapps.osubardeals.osubardealsapp.Fragments.HomeFragment;
 import mobileapps.osubardeals.osubardealsapp.Fragments.LoginFragment;
 import mobileapps.osubardeals.osubardealsapp.R;
 import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
@@ -22,9 +23,20 @@ public class MainActivity extends AppCompatActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
         manager = getSupportFragmentManager();
-        LoginFragment loginFragment = new LoginFragment();
-        FragmentManagerSingleton.instance().loadFragment(manager, loginFragment, false);
+        autoLogin();
         Log.i("lifeCycle", "onCreate");
+    }
+
+    public void autoLogin() {
+        //an email is set so auto login
+        Log.i("email",getSharedPreferences("preferences", 0).getString("email", "false"));
+        if (!getSharedPreferences("preferences", 0).getString("email", "false").equals("false")) {
+            HomeFragment homeFragment = new HomeFragment();
+            FragmentManagerSingleton.instance().loadFragment(manager, homeFragment, false);
+        } else {
+            LoginFragment loginFragment = new LoginFragment();
+            FragmentManagerSingleton.instance().loadFragment(manager, loginFragment, false);
+        }
     }
 
 
