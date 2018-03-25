@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -19,9 +20,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.maps.MapView;
 
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
+import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
 /**
  * Created by Erin George on 3/20/2018.
@@ -30,8 +35,11 @@ import mobileapps.osubardeals.osubardealsapp.R;
 public class SingleDealFragment extends Fragment {
 
     private TextView price, hour, location;
+    private Button dealBarButton;
     private MapView map;
     private CheckBox favorite;
+
+    private String barName, barDesc, barHours, barAddress;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -142,6 +150,35 @@ public class SingleDealFragment extends Fragment {
         queue.add(stringRequest);
     }
 
+    public void getBar(Context c, final String name) {
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(c);
+        //String url ="http://www.google.com";
+        String url = "https://osu-bar-deals-api.herokuapp.com/bars/for?bar_name=" + name;
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("volley res", response);
+                        JSONObject bar = JSONHelper.getJSONObject(response);
+                        barName = JSONHelper.getJSONField(bar, "name");
+                        barDesc = JSONHelper.getJSONField(bar, "description");
+                        barHours = JSONHelper.getJSONField(bar, "hours");
+                        barAddress = JSONHelper.getJSONField(bar, "address");
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("volley error", error.toString());
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -152,6 +189,7 @@ public class SingleDealFragment extends Fragment {
         hour = (TextView)v.findViewById(R.id.dealHours);
         location = (TextView)v.findViewById(R.id.dealLocation);
         map = (MapView) v.findViewById(R.id.dealDirections);
+        dealBarButton = (Button) v.findViewById(R.id.dealBarButton);
         favorite = (CheckBox) v.findViewById(R.id.dealFavorite);
 
 
@@ -160,6 +198,20 @@ public class SingleDealFragment extends Fragment {
             price.setText(getArguments().getString("description"));
             hour.setText(getArguments().getString("hours"));
             location.setText(getArguments().getString("location"));
+            getBar(getContext(), getArguments().getString("location"));
+            dealBarButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Bundle args = new Bundle();
+                    args.putString("name", barName);
+                    args.putString("description", barDesc);
+                    args.putString("hours", barHours);
+                    args.putString("address", barAddress);
+                    BarFragment barFragment = new BarFragment();
+                    barFragment.setArguments(args);
+                    FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), barFragment,true);
+                }
+            });
         }
 
         final String email = getContext().getSharedPreferences("preferences", 0).getString("email","false");

@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
@@ -41,6 +42,8 @@ import java.util.List;
 import java.util.Locale;
 
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
+import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 import mobileapps.osubardeals.osubardealsapp.Utilities.DialogHelper;
 
 
@@ -55,6 +58,7 @@ import mobileapps.osubardeals.osubardealsapp.Utilities.DialogHelper;
 public class BarFragment extends Fragment implements OnMapReadyCallback {
 
     private TextView name, desc, hoursOp, hours, directions;
+    private Button barDealsButton;
     private MapView map;
     private CheckBox favorite;
     private GoogleMap mMap;
@@ -108,13 +112,13 @@ public class BarFragment extends Fragment implements OnMapReadyCallback {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_bar, container, false);
         name = (TextView) v.findViewById(R.id.barName);
+        barDealsButton = (Button) v.findViewById(R.id.barDealsButton);
         desc = (TextView) v.findViewById(R.id.barDescription);
         hoursOp = (TextView) v.findViewById(R.id.HoursOp);
         hours = (TextView) v.findViewById(R.id.barHours);
@@ -131,6 +135,16 @@ public class BarFragment extends Fragment implements OnMapReadyCallback {
             desc.setText(getArguments().getString("description"));
             hours.setText(getArguments().getString("hours"));
             address = getArguments().getString("address");
+            barDealsButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DealsFragment dealsFragment = new DealsFragment();
+                    Bundle args = new Bundle();
+                    args.putString("barName", getArguments().getString("name"));
+                    dealsFragment.setArguments(args);
+                    FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), dealsFragment,true);
+                }
+            });
         }
 
         initFavorite(getContext(), email,name.getText().toString());

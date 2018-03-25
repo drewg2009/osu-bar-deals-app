@@ -37,4 +37,25 @@ public class JSONHelper {
         }
         return obj;
     }
+
+    public static JSONObject getJSONObject(String response){
+        JSONObject obj = null;
+        try {
+            obj = new JSONObject(response);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return obj;
+    }
+
+    public static String getJSONField(JSONObject jsonObject, String key) {
+        try {
+            return jsonObject.getString(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 }

@@ -56,12 +56,13 @@ public class DealsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public void getAllDeals(Context c) {
+    public void getAllDeals(Context c, String barName) {
 
 // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(c);
         //String url ="http://www.google.com";
-        String url = "https://osu-bar-deals-api.herokuapp.com/deals/all";
+        String url = "https://osu-bar-deals-api.herokuapp.com/deals/"
+                + (barName == null || barName.isEmpty() ? "all" : "for?bar_name=" + barName);
 
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -133,7 +134,7 @@ public class DealsFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         spinner = (ProgressBar)v.findViewById(R.id.dealsSpinner);
-        getAllDeals(getContext());
+        getAllDeals(getContext(), getArguments() == null ? null : getArguments().getString("barName"));
 
         return v;
     }
