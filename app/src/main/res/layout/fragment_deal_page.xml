@@ -10,6 +10,8 @@
         android:layout_weight="10"
         android:text="Favorite" />
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -54,5 +56,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="View Bar!" />
+
+        <Button
+            android:id="@+id/shareButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Share Deal"/>
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

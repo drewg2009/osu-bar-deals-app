@@ -1,6 +1,7 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -35,7 +36,7 @@ import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 public class SingleDealFragment extends Fragment {
 
     private TextView price, hour, location;
-    private Button dealBarButton;
+    private Button dealBarButton, shareDealButton;
     private MapView map;
     private CheckBox favorite;
 
@@ -190,6 +191,7 @@ public class SingleDealFragment extends Fragment {
         location = (TextView)v.findViewById(R.id.dealLocation);
         map = (MapView) v.findViewById(R.id.dealDirections);
         dealBarButton = (Button) v.findViewById(R.id.dealBarButton);
+        shareDealButton = (Button) v.findViewById(R.id.shareButton);
         favorite = (CheckBox) v.findViewById(R.id.dealFavorite);
 
 
@@ -231,6 +233,21 @@ public class SingleDealFragment extends Fragment {
                 }
             }
         });
+
+        shareDealButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //share popup
+                Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
+                sharingIntent.setType("text/plain");
+                String shareBody = "Look at this bar deal I found! " + price.getText() +
+                        ". It is at " + location.getText() + ", " + hour.getText();
+                sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Subject Here");
+                sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
+                startActivity(Intent.createChooser(sharingIntent, "Share via"));
+            }
+        });
+
         initFavorite(getContext(), email, price.getText().toString());
 
         return v;
