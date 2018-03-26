@@ -27,7 +27,7 @@ public class HomeFragment extends Fragment {
 
     private CardView dealsCard;
     private CardView barsCard;
-    private CardView barCrawlCard;
+    //private CardView barCrawlCard;
     private CardView favoritesCard;
     private Button logoutButton;
 
@@ -80,7 +80,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         dealsCard = view.findViewById(R.id.deals_card);
         barsCard = view.findViewById(R.id.bars_card);
-        barCrawlCard = view.findViewById(R.id.barCrawl_card);
+        //barCrawlCard = view.findViewById(R.id.barCrawl_card);
         favoritesCard = view.findViewById(R.id.favorites_card);
         logoutButton = view.findViewById(R.id.logoutButton);
 
@@ -97,12 +97,14 @@ public class HomeFragment extends Fragment {
 
             }
         });
+        /*
         barCrawlCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new ListBarCrawlFragment(),true);
             }
         });
+        */
         favoritesCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

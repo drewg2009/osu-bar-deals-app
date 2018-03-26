@@ -43,6 +43,7 @@ public class ListBarCrawlFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ProgressBar spinner;
+    private Button create;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -138,6 +139,13 @@ public class ListBarCrawlFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         spinner = (ProgressBar) v.findViewById(R.id.crawlSpinner);
+        create = (Button) v.findViewById(R.id.crawlCreate);
+        create.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new NewBarCrawlFragment(),true);
+            }
+        });
+
         getAllCrawls(getContext());
         return v;
     }
