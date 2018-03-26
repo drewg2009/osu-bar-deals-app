@@ -33,21 +33,17 @@ private Context c;
         public CardView cardView;
         public ImageView imageView;
         public TextView nameTextView;
-        public TextView descTextView;
-        public TextView hoursTextView;
-        public TextView addressTextView;
+        public TextView dealNameTextView;
 
 
-        public ViewHolder(CardView cardView, ImageView imageView, TextView nameTextView, TextView descTextView,
-                          TextView hoursTextView, TextView addressTextView, LinearLayout ll) {
+        public ViewHolder(CardView cardView, ImageView imageView, TextView nameTextView, TextView dealNameTextView,
+                            LinearLayout ll) {
             super(ll);
             this.ll = ll;
             this.cardView = cardView;
             this.imageView = imageView;
             this.nameTextView = nameTextView;
-            this.descTextView = descTextView;
-            this.hoursTextView = hoursTextView;
-            this.addressTextView = addressTextView;
+            this.dealNameTextView = dealNameTextView;
         }
     }
 
@@ -69,28 +65,11 @@ private Context c;
         CardView cardView = favoriteCard.findViewById(R.id.favoriteCard);
         ImageView imageView = favoriteCard.findViewById(R.id.favoriteImageView);
         final TextView nameTextView = favoriteCard.findViewById(R.id.nameTextViewFavorite);
-        final TextView descTextView = favoriteCard.findViewById(R.id.descTextViewFavorite);
-        final TextView hoursTextView = favoriteCard.findViewById(R.id.hoursTextViewFavorite);
-//        TextView addressTextView = favoriteCard.findViewById(R.id.addressTextViewFavorite);
+        final TextView dealNameTextView = favoriteCard.findViewById(R.id.dealNameTextViewFavorite);
 
         ViewHolder vh = new ViewHolder
-                (cardView, imageView, nameTextView, descTextView, hoursTextView, null, favoriteCard);
+                (cardView, imageView, nameTextView, dealNameTextView, favoriteCard);
 
-        favoriteCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO change this up based on deal or bar
-//                Bundle barBundle = new Bundle();
-//                barBundle.putString("location", nameTextView.getText().toString());
-//                barBundle.putString("description", descTextView.getText().toString());
-//                barBundle.putString("hours", hoursTextView.getText().toString());
-//                BarFragment bar= new BarFragment();
-//                bar.setArguments(barBundle);
-//                ((Activity) parent.getContext()).getFragmentManager();
-//                FragmentManagerSingleton.instance().loadFragment(((FragmentActivity) parent.getContext()).getSupportFragmentManager(), bar, true);
-        }
-
-        });
         return vh;
     }
 
@@ -101,9 +80,13 @@ private Context c;
         // - replace the contents of the view with that element
 
         try {
-            holder.nameTextView.setText(mDataset.get(position).getString("location"));
-            holder.descTextView.setText(mDataset.get(position).getString("description"));
-            holder.hoursTextView.setText(mDataset.get(position).getString("hours"));
+            holder.nameTextView.setText(mDataset.get(position).getString("bar_name"));
+            if(mDataset.get(position).getString("type").equals("deal")) {
+                holder.dealNameTextView.setText(mDataset.get(position).getString("deal_name"));
+            }
+            else{
+                holder.dealNameTextView.setVisibility(View.GONE );
+            }
 
         }
         catch (JSONException ex){

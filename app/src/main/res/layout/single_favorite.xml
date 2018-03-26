@@ -30,28 +30,14 @@
                 android:text="text"
                 android:textSize="24sp" />
             <TextView
-                android:id="@+id/descTextViewFavorite"
+                android:id="@+id/dealNameTextViewFavorite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_margin="4dp"
                 android:text="text" />
 
-            <TextView
-                android:id="@+id/hoursTextViewFavorite"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_margin="4dp"
-                android:text="text" />
 
-            <!--<TextView-->
-                <!--android:id="@+id/addressTextViewBar"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center_horizontal"-->
-                <!--android:layout_margin="4dp"-->
-                <!--android:text="text" />-->
 
 
         </LinearLayout>
