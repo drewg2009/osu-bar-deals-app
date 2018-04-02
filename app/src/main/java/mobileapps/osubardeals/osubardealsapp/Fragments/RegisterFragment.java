@@ -116,7 +116,7 @@ public class RegisterFragment extends Fragment {
                                 editor.putString("email", email);
                                 editor.apply();
 
-                                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new DealsFragment(),true);
+                                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new HomeFragment(),true);
                             }
                             registerSpinner.setVisibility(View.GONE);
                         }

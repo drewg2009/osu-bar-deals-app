@@ -115,12 +115,13 @@ public class LoginFragment extends Fragment {
                                         }
                                         else{
                                             //start user session
-                                            SharedPreferences pref = getContext().getSharedPreferences("preferences", 0); // 0 - for private mode
-                                            SharedPreferences.Editor editor = pref.edit();
-                                            editor.putString("email", email);
-                                            editor.apply();
-
-                                            FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new HomeFragment(),true);
+                                            if(getContext()!=null) {
+                                                SharedPreferences pref = getContext().getSharedPreferences("preferences", 0); // 0 - for private mode
+                                                SharedPreferences.Editor editor = pref.edit();
+                                                editor.putString("email", email);
+                                                editor.apply();
+                                                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new HomeFragment(),true);
+                                            }
                                         }
                                         loginSpinner.setVisibility(View.GONE);
                                     }

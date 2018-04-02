@@ -23,16 +23,19 @@ public class MainActivity extends AppCompatActivity {
 //        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 //        setSupportActionBar(toolbar);
         manager = getSupportFragmentManager();
-        autoLogin();
+        autoLogin(true);
         Log.i("lifeCycle", "onCreate");
     }
 
-    public void autoLogin() {
+    public void autoLogin(boolean ignore) {
+        if(ignore){
+            LoginFragment loginFragment = new LoginFragment();
+            FragmentManagerSingleton.instance().loadFragment(manager, loginFragment, false);
+        }
         //an email is set so auto login
-        Log.i("email",getSharedPreferences("preferences", 0).getString("email", "false"));
-        if (!getSharedPreferences("preferences", 0).getString("email", "false").equals("false")) {
+        else if (!getSharedPreferences("preferences", 0).getString("email", "false").equals("false")) {
             HomeFragment homeFragment = new HomeFragment();
-            FragmentManagerSingleton.instance().loadFragment(manager, homeFragment, false);
+            FragmentManagerSingleton.instance().loadFragment(manager, homeFragment, true);
         } else {
             LoginFragment loginFragment = new LoginFragment();
             FragmentManagerSingleton.instance().loadFragment(manager, loginFragment, false);
