@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ import com.android.volley.toolbox.Volley;
 
 import mobileapps.osubardeals.osubardealsapp.Adapters.DealsAdapter;
 import mobileapps.osubardeals.osubardealsapp.R;
+import mobileapps.osubardeals.osubardealsapp.Utilities.FragmentManagerSingleton;
 import mobileapps.osubardeals.osubardealsapp.Utilities.JSONHelper;
 
 
@@ -39,6 +41,7 @@ public class DealsFragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private ProgressBar spinner;
+    private Button home, deals, bars, favorites;
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -135,6 +138,46 @@ public class DealsFragment extends Fragment {
 
         spinner = (ProgressBar)v.findViewById(R.id.dealsSpinner);
         getAllDeals(getContext(), getArguments() == null ? null : getArguments().getString("barName"));
+
+        home= (Button) v.findViewById(R.id.home_button);
+        deals= (Button) v.findViewById(R.id.deals_button);
+        bars= (Button) v.findViewById(R.id.bars_button);
+        favorites= (Button) v.findViewById(R.id.favorites_button);
+
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new HomeFragment(),true);
+            }
+        });
+        deals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
+            }
+        });
+        bars.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarsFragment(),true);
+
+            }
+        });
+        /*
+        barCrawlCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new ListBarCrawlFragment(),true);
+            }
+        });
+        */
+        favorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new FavoritesFragment(),true);
+            }
+        });
+
 
         return v;
     }

@@ -39,6 +39,8 @@ public class SingleDealFragment extends Fragment {
     private Button dealBarButton, shareDealButton;
     private MapView map;
     private CheckBox favorite;
+    private Button home, deals, bars, favorites;
+
 
     private String barName, barDesc, barHours, barAddress;
 
@@ -249,6 +251,46 @@ public class SingleDealFragment extends Fragment {
         });
 
         initFavorite(getContext(), email, price.getText().toString());
+
+        home= (Button) v.findViewById(R.id.home_button);
+        deals= (Button) v.findViewById(R.id.deals_button);
+        bars= (Button) v.findViewById(R.id.bars_button);
+        favorites= (Button) v.findViewById(R.id.favorites_button);
+
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new HomeFragment(),true);
+            }
+        });
+        deals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
+            }
+        });
+        bars.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarsFragment(),true);
+
+            }
+        });
+        /*
+        barCrawlCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new ListBarCrawlFragment(),true);
+            }
+        });
+        */
+        favorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new FavoritesFragment(),true);
+            }
+        });
+
 
         return v;
     }
