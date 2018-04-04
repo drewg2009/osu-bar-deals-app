@@ -4,6 +4,37 @@
     android:orientation="vertical">
 
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/home_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Home"/>
+
+
+        <Button
+            android:id="@+id/bars_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bars"/>
+
+        <Button
+            android:id="@+id/deals_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Deals"/>
+
+        <Button
+            android:id="@+id/favorites_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Favorites"/>
+
+    </LinearLayout>
+
     <ScrollView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

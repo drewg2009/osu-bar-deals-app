@@ -63,6 +63,8 @@ public class BarFragment extends Fragment implements OnMapReadyCallback {
     private CheckBox favorite;
     private GoogleMap mMap;
     private String address;
+    private Button home, deals, bars, favorites;
+
 
 
     // TODO: Rename parameter arguments, choose names that match
@@ -162,6 +164,44 @@ public class BarFragment extends Fragment implements OnMapReadyCallback {
             }
         });
 
+        home= (Button) v.findViewById(R.id.home_button);
+        deals= (Button) v.findViewById(R.id.deals_button);
+        bars= (Button) v.findViewById(R.id.bars_button);
+        favorites= (Button) v.findViewById(R.id.favorites_button);
+
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new HomeFragment(),true);
+            }
+        });
+        deals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
+            }
+        });
+        bars.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarsFragment(),true);
+
+            }
+        });
+        /*
+        barCrawlCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new ListBarCrawlFragment(),true);
+            }
+        });
+        */
+        favorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new FavoritesFragment(),true);
+            }
+        });
 
         SupportMapFragment mapFragment;
         FragmentManager fm = getChildFragmentManager();
