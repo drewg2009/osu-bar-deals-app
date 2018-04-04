@@ -18,7 +18,8 @@
         android:layout_height="wrap_content"
         android:text="@string/register_header"
         android:textAlignment="center"
-        android:textSize="40sp"
+        android:textSize="30sp"
+        android:textStyle="bold"
         android:layout_marginTop="40dp"/>
 
     <EditText

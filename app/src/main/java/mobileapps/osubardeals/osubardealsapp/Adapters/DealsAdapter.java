@@ -35,17 +35,15 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
         // each data item is just a string in this case
         public LinearLayout ll;
         public CardView cardView;
-        public ImageView imageView;
         public TextView descTextView;
         public TextView hoursTextView;
         public TextView locationTextView;
 
-        public ViewHolder(CardView cardView, ImageView imageView, TextView descTextView,
+        public ViewHolder(CardView cardView, TextView descTextView,
                           TextView hoursTextView, TextView locationTextView, LinearLayout ll) {
             super(ll);
             this.ll = ll;
             this.cardView = cardView;
-            this.imageView = imageView;
             this.descTextView = descTextView;
             this.hoursTextView = hoursTextView;
             this.locationTextView = locationTextView;
@@ -65,12 +63,11 @@ public class DealsAdapter extends RecyclerView.Adapter<DealsAdapter.ViewHolder> 
         LinearLayout dealCard = (LinearLayout) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.single_deal, parent, false);
         CardView cardView = (CardView) dealCard.findViewById(R.id.dealCard);
-        ImageView imageView = (ImageView) dealCard.findViewById(R.id.dealImageView);
         final TextView descTextView = (TextView) dealCard.findViewById(R.id.descTextView);
         final TextView hoursTextView = (TextView) dealCard.findViewById(R.id.hoursTextView);
         final TextView locationTextView = (TextView) dealCard.findViewById(R.id.locationTextView);
 
-        ViewHolder vh = new ViewHolder(cardView, imageView, descTextView, hoursTextView, locationTextView, dealCard);
+        ViewHolder vh = new ViewHolder(cardView, descTextView, hoursTextView, locationTextView, dealCard);
 
         dealCard.setOnClickListener(new View.OnClickListener() {
             @Override

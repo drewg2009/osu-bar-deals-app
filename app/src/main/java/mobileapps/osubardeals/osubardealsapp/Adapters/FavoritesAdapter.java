@@ -31,17 +31,15 @@ private Context c;
         // each data item is just a string in this case
         public LinearLayout ll;
         public CardView cardView;
-        public ImageView imageView;
         public TextView nameTextView;
         public TextView dealNameTextView;
 
 
-        public ViewHolder(CardView cardView, ImageView imageView, TextView nameTextView, TextView dealNameTextView,
+        public ViewHolder(CardView cardView, TextView nameTextView, TextView dealNameTextView,
                             LinearLayout ll) {
             super(ll);
             this.ll = ll;
             this.cardView = cardView;
-            this.imageView = imageView;
             this.nameTextView = nameTextView;
             this.dealNameTextView = dealNameTextView;
         }
@@ -63,12 +61,11 @@ private Context c;
 
 
         CardView cardView = favoriteCard.findViewById(R.id.favoriteCard);
-        ImageView imageView = favoriteCard.findViewById(R.id.favoriteImageView);
         final TextView nameTextView = favoriteCard.findViewById(R.id.nameTextViewFavorite);
         final TextView dealNameTextView = favoriteCard.findViewById(R.id.dealNameTextViewFavorite);
 
         ViewHolder vh = new ViewHolder
-                (cardView, imageView, nameTextView, dealNameTextView, favoriteCard);
+                (cardView, nameTextView, dealNameTextView, favoriteCard);
 
         return vh;
     }

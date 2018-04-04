@@ -32,7 +32,14 @@
             android:text="Favorites"/>
 
     </LinearLayout>
-
+    <TextView
+        android:id="@+id/dealHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Deals"
+        android:textAlignment="center"
+        android:textSize="30sp"
+        android:textStyle="bold" />
     <ProgressBar
         android:id="@+id/dealsSpinner"
         style="?android:attr/progressBarStyleLarge"

@@ -36,19 +36,17 @@ private Context c;
         // each data item is just a string in this case
         public LinearLayout ll;
         public CardView cardView;
-        public ImageView imageView;
         public TextView nameTextView;
         public TextView descTextView;
         public TextView hoursTextView;
         public TextView addressTextView;
 
 
-        public ViewHolder(CardView cardView, ImageView imageView, TextView nameTextView, TextView descTextView,
+        public ViewHolder(CardView cardView, TextView nameTextView, TextView descTextView,
                           TextView hoursTextView, TextView addressTextView, LinearLayout ll) {
             super(ll);
             this.ll = ll;
             this.cardView = cardView;
-            this.imageView = imageView;
             this.nameTextView = nameTextView;
             this.descTextView = descTextView;
             this.hoursTextView = hoursTextView;
@@ -72,14 +70,13 @@ private Context c;
 
 
         CardView cardView = barCard.findViewById(R.id.barCard);
-        ImageView imageView = barCard.findViewById(R.id.barImageView);
         final TextView nameTextView = barCard.findViewById(R.id.nameTextViewBar);
         final TextView descTextView = barCard.findViewById(R.id.descTextViewBar);
         final TextView hoursTextView = barCard.findViewById(R.id.hoursTextViewBar);
         final TextView addressTextView = barCard.findViewById(R.id.addressTextViewBar);
 
         ViewHolder vh = new ViewHolder
-                (cardView, imageView, nameTextView, descTextView, hoursTextView, addressTextView, barCard);
+                (cardView, nameTextView, descTextView, hoursTextView, addressTextView, barCard);
 
         barCard.setOnClickListener(new View.OnClickListener() {
             @Override
