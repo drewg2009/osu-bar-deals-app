@@ -1,24 +1,16 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import mobileapps.osubardeals.osubardealsapp.Adapters.BarsAdapter;
 import mobileapps.osubardeals.osubardealsapp.R;
@@ -38,7 +30,6 @@ public class BarsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ProgressBar spinner;
     private Button home, deals, bars, favorites;
 
     // TODO: Rename parameter arguments, choose names that match
@@ -75,35 +66,13 @@ public class BarsFragment extends Fragment {
     }
 
     public void getAllBars(Context c) {
+        SharedPreferences s = c.getSharedPreferences("preferences",0);
+        String barsJSONStr = s.getString("barsJSON","false");
+        if (!barsJSONStr.equals("false")){
+            mAdapter = new BarsAdapter(JSONHelper.getJSONArray(barsJSONStr));
+            mRecyclerView.setAdapter(mAdapter);
+        }
 
-// Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(c);
-        //String url ="http://www.google.com";
-        String url = "https://osu-bar-deals-api.herokuapp.com/bars/all";
-
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //mTextView.setText("Response is: "+ response.substring(0,500));
-                        Log.i("volley res", response.toString());
-                        mAdapter = new BarsAdapter(JSONHelper.getJSONArray(response.toString()));
-                        mRecyclerView.setAdapter(mAdapter);
-                        //remove spinner
-                        spinner.setVisibility(View.GONE);
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("volley error", error.toString());
-                //mTextView.setText("That didn't work!");
-            }
-        });
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
     }
 
     @Override
@@ -129,28 +98,27 @@ public class BarsFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        spinner = (ProgressBar) v.findViewById(R.id.barsSpinner);
-        home= (Button) v.findViewById(R.id.home_button);
-        deals= (Button) v.findViewById(R.id.deals_button);
-        bars= (Button) v.findViewById(R.id.bars_button);
-        favorites= (Button) v.findViewById(R.id.favorites_button);
+        home = (Button) v.findViewById(R.id.home_button);
+        deals = (Button) v.findViewById(R.id.deals_button);
+        bars = (Button) v.findViewById(R.id.bars_button);
+        favorites = (Button) v.findViewById(R.id.favorites_button);
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new HomeFragment(),true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new HomeFragment(), true);
             }
         });
         deals.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new DealsFragment(),true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new DealsFragment(), true);
             }
         });
         bars.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new BarsFragment(),true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new BarsFragment(), true);
 
             }
         });
@@ -165,7 +133,7 @@ public class BarsFragment extends Fragment {
         favorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new FavoritesFragment(),true);
+                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new FavoritesFragment(), true);
             }
         });
 
