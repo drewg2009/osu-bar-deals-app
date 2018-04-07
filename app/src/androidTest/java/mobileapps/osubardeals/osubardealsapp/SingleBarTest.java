@@ -26,7 +26,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import mobileapps.osubardeals.osubardealsapp.Activities.MainActivity;
-import mobileapps.osubardeals.osubardealsapp.Fragments.BarFragment;
 
 
 @RunWith(AndroidJUnit4.class)
@@ -79,9 +78,8 @@ public class SingleBarTest {
         //From bars page click big bar - assumes it works
         solo.clickOnText("The Big Bar");
         solo.waitForView(solo.getView(R.id.barFavorite));
-
         //Check that Big Bar's page was loaded
-        Assert.assertTrue(solo.getText(0).getText().toString().equals("The Big Bar"));
+        Assert.assertTrue(solo.getText(5).getText().toString().equals("The Big Bar"));
 
     }
 }
