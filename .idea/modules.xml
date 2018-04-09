@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/OSUBarDeals.iml" filepath="$PROJECT_DIR$/OSUBarDeals.iml" />
       <module fileurl="file://D:\OneDrive\Documents\OSU\Spring 2018\Mobile Apps Dev\BarAppProject\osu-bar-deals-app\OSUBarDeals.iml" filepath="D:\OneDrive\Documents\OSU\Spring 2018\Mobile Apps Dev\BarAppProject\osu-bar-deals-app\OSUBarDeals.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/osu-bar-deals-app.iml" filepath="$PROJECT_DIR$/osu-bar-deals-app.iml" />

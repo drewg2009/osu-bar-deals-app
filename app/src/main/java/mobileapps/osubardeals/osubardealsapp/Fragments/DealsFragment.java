@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -59,13 +58,12 @@ public class DealsFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public void getAllDeals(Context c, String barName) {
+    public void getAllDeals(Context c) {
 
 // Instantiate the RequestQueue.
         RequestQueue queue = Volley.newRequestQueue(c);
         //String url ="http://www.google.com";
-        String url = "https://osu-bar-deals-api.herokuapp.com/deals/"
-                + (barName == null || barName.isEmpty() ? "all" : "for?bar_name=" + barName);
+        String url = "https://osu-bar-deals-api.herokuapp.com/deals/all";
 
 // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -74,8 +72,8 @@ public class DealsFragment extends Fragment {
                     public void onResponse(String response) {
                         // Display the first 500 characters of the response string.
                         //mTextView.setText("Response is: "+ response.substring(0,500));
-                        Log.i("volley res", response.toString());
-                        mAdapter = new DealsAdapter(JSONHelper.getJSONArray(response.toString()));
+                        Log.i("volley res", response);
+                        mAdapter = new DealsAdapter(JSONHelper.getJSONArray(response));
                         mRecyclerView.setAdapter(mAdapter);
                         //remove spinner
                         spinner.setVisibility(View.GONE);
@@ -137,7 +135,7 @@ public class DealsFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         spinner = (ProgressBar)v.findViewById(R.id.dealsSpinner);
-        getAllDeals(getContext(), getArguments() == null ? null : getArguments().getString("barName"));
+        getAllDeals(getContext());
 
         home= (Button) v.findViewById(R.id.home_button);
         deals= (Button) v.findViewById(R.id.deals_button);
