@@ -95,58 +95,128 @@ public class LoginFragment extends Fragment {
             // Inflate the layout for this fragment// Instantiate the RequestQueue.
             RequestQueue queue = Volley.newRequestQueue(getContext());
             //String url ="http://www.google.com";
-            String url = "https://osu-bar-deals-api.herokuapp.com/users/login?email="+email+"&password="+password;
+            String url = "https://osu-bar-deals-api.herokuapp.com/users/login?email=" + email + "&password=" + password;
 
             loginSpinner.setVisibility(View.VISIBLE);
             // Request a string response from the provided URL.
-                        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                                new Response.Listener<String>() {
-                                    @Override
-                                    public void onResponse(String response) {
-                                        // Display the first 500 characters of the response string.
-                                        //mTextView.setText("Response is: "+ response.substring(0,500));
-                                        Log.i("Login: volley res", response);
-                                        //login credentials wrong
-                                        if(response.equals("false")){
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            // Display the first 500 characters of the response string.
+                            //mTextView.setText("Response is: "+ response.substring(0,500));
+                            Log.i("Login: volley res", response);
+                            //login credentials wrong
+                            if (response.equals("false")) {
 
 
+                                DialogHelper.showDialog(getContext(), "Your email or password is incorrect. Please try again!", "Login Error");
+                            } else {
 
-                                            DialogHelper.showDialog(getContext(), "Your email or password is incorrect. Please try again!", "Login Error");
-                                        }
-                                        else{
-                                            //start user session
-                                            if(getContext()!=null) {
-                                                SharedPreferences pref = getContext().getSharedPreferences("preferences", 0); // 0 - for private mode
-                                                SharedPreferences.Editor editor = pref.edit();
-                                                editor.putString("email", email);
-                                                editor.apply();
-                                                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new HomeFragment(),true);
-                                            }
-                                        }
-                                        loginSpinner.setVisibility(View.GONE);
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                DialogHelper.showDialog(getContext(), "Network errors. Please try again later.", "Login Network Error");
-                                loginSpinner.setVisibility(View.GONE);
+                                getAllBarsIfNotUpdated(email);
                             }
-                        });
+                            loginSpinner.setVisibility(View.GONE);
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    DialogHelper.showDialog(getContext(), "Network errors. Please try again later.", "Login Network Error");
+                    loginSpinner.setVisibility(View.GONE);
+                }
+            });
             // Add the request to the RequestQueue.
-                        queue.add(stringRequest);
-        }
-        else{
+            queue.add(stringRequest);
+        } else {
             DialogHelper.showDialog(getContext(), "Please enter a valid email and password.", "Login Validation Error");
             loginSpinner.setVisibility(View.GONE);
 
         }
     }
 
+    private void startUserSession(String email){
+        //start user session
+        if (getContext() != null) {
+            SharedPreferences pref = getContext().getSharedPreferences("preferences", 0); // 0 - for private mode
+            SharedPreferences.Editor editor = pref.edit();
+            editor.putString("email", email);
+            editor.apply();
+            FragmentManagerSingleton.instance().loadFragment(getFragmentManager(), new HomeFragment(), true);
+        }
+    }
+
+    public void getAllBarsIfNotUpdated(final String email) {
+        final SharedPreferences sp = getContext().getSharedPreferences("preferences", 0);
+
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        //String url ="http://www.google.com";
+        String url = "https://osu-bar-deals-api.herokuapp.com/bars/all";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //if not cached or the cache is not up to date, cache the data
+                        if (sp.getString("barsJSON", "false").equals("false") ||
+                                !sp.getString("barsJSON", "false").equals(response)) {
+                            sp.edit().putString("barsJSON", response).apply();
+                        }
+                        getAllDealsIfNotUpdated(email);
+
+                    }
+                }, new Response.ErrorListener()
+
+        {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("volley error", error.toString());
+                DialogHelper.showDialog(getContext(), "You need to connect to the internet to use the app", "Network Connection Error");
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    public void getAllDealsIfNotUpdated(final String email) {
+        final SharedPreferences sp = getContext().getSharedPreferences("preferences", 0);
+
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(getContext());
+        //String url ="http://www.google.com";
+        String url = "https://osu-bar-deals-api.herokuapp.com/deals/all";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //if not cached or the cache is not up to date, cache the data
+                        if (sp.getString("dealsJSON", "false").equals("false") ||
+                                !sp.getString("dealsJSON", "false").equals(response)) {
+                            sp.edit().putString("dealsJSON", response).apply();
+                        }
+                        startUserSession(email);
+                    }
+                }, new Response.ErrorListener()
+
+        {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("volley error", error.toString());
+                DialogHelper.showDialog(getContext(), "You need to connect to the internet to use the app", "Network Connection Error");
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-
 
         View v = inflater.inflate(R.layout.fragment_login, container, false);
         registerButton = (Button) v.findViewById(R.id.loginRegisterButton);
