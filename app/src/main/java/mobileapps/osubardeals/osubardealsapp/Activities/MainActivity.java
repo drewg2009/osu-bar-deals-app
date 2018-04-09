@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         manager = getSupportFragmentManager();
-        autoLogin(true);
         getAllBarsIfNotUpdated();
+
         Log.i("lifeCycle", "onCreate");
     }
 
@@ -68,6 +68,42 @@ public class MainActivity extends AppCompatActivity {
                                 !sp.getString("barsJSON", "false").equals(response)) {
                             sp.edit().putString("barsJSON", response).apply();
                         }
+                        getAllDealsIfNotUpdated();
+
+                    }
+                }, new Response.ErrorListener()
+
+        {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("volley error", error.toString());
+            }
+        });
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    public void getAllDealsIfNotUpdated() {
+        final SharedPreferences sp = getSharedPreferences("preferences", 0);
+
+
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+        //String url ="http://www.google.com";
+        String url = "https://osu-bar-deals-api.herokuapp.com/deals/all";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //if not cached or the cache is not up to date, cache the data
+                        if (sp.getString("dealsJSON", "false").equals("false") ||
+                                !sp.getString("dealsJSON", "false").equals(response)) {
+                            sp.edit().putString("dealsJSON", response).apply();
+                        }
+                        autoLogin(true);
+
                     }
                 }, new Response.ErrorListener()
 

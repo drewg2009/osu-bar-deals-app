@@ -1,24 +1,16 @@
 package mobileapps.osubardeals.osubardealsapp.Fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ProgressBar;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 
 import mobileapps.osubardeals.osubardealsapp.Adapters.DealsAdapter;
 import mobileapps.osubardeals.osubardealsapp.R;
@@ -39,7 +31,6 @@ public class DealsFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private ProgressBar spinner;
     private Button home, deals, bars, favorites;
 
 
@@ -59,35 +50,12 @@ public class DealsFragment extends Fragment {
     }
 
     public void getAllDeals(Context c) {
-
-// Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(c);
-        //String url ="http://www.google.com";
-        String url = "https://osu-bar-deals-api.herokuapp.com/deals/all";
-
-// Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        // Display the first 500 characters of the response string.
-                        //mTextView.setText("Response is: "+ response.substring(0,500));
-                        Log.i("volley res", response);
-                        mAdapter = new DealsAdapter(JSONHelper.getJSONArray(response));
-                        mRecyclerView.setAdapter(mAdapter);
-                        //remove spinner
-                        spinner.setVisibility(View.GONE);
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("volley error", error.toString());
-                //mTextView.setText("That didn't work!");
-            }
-        });
-// Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        SharedPreferences s = c.getSharedPreferences("preferences",0);
+        String dealsJSONStr = s.getString("dealsJSON","false");
+        if (!dealsJSONStr.equals("false")){
+            mAdapter = new DealsAdapter(JSONHelper.getJSONArray(dealsJSONStr));
+            mRecyclerView.setAdapter(mAdapter);
+        }
     }
 
 
@@ -134,7 +102,6 @@ public class DealsFragment extends Fragment {
         mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
-        spinner = (ProgressBar)v.findViewById(R.id.dealsSpinner);
         getAllDeals(getContext());
 
         home= (Button) v.findViewById(R.id.home_button);

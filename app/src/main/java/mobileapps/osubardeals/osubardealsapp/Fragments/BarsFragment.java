@@ -122,14 +122,6 @@ public class BarsFragment extends Fragment {
 
             }
         });
-        /*
-        barCrawlCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManagerSingleton.instance().loadFragment(getFragmentManager(),new ListBarCrawlFragment(),true);
-            }
-        });
-        */
         favorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,9 +147,6 @@ public class BarsFragment extends Fragment {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
-        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
         }
     }
 
